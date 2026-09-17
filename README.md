@@ -1,5 +1,15 @@
 # Sistema de Gestão de Informações - DML CONTABILIDADE LTDA.
 
+## Nome dos Integrantes do Projeto:
+
+* Vinícius Dias Gomes - RGM: 47441081
+* Guilherme de Souza Lopes dos Santos - RGM: 47475609
+* Valquíria Rodrigues de Macedo - RGM: 47415061
+* Gabrielly Witai Pereira - RGM: 47396750
+* Pablo Henrique Lourenço Guimarães - RGM: 47672285
+
+
+
 ## Introdução
 
 ### Contextualização do Problema
