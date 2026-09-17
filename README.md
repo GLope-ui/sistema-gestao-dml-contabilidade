@@ -249,13 +249,20 @@ A definição definitiva das cardinalidades deverá ser validada de acordo com o
 
 ## Diagrama Entidade-Relacionamento (DER)
 
-O Diagrama Entidade-Relacionamento foi desenvolvido com base nas informações levantadas durante a pesquisa de campo e representa, de forma gráfica, as entidades, atributos, relacionamentos e respectivas cardinalidades identificadas para a organização.
+O Diagrama Entidade-Relacionamento (DER) foi elaborado com base nas informações levantadas durante a pesquisa de campo realizada na **DML Contabilidade LTDA.**
 
-O DER definitivo será disponibilizado em formato de imagem no repositório.
+O diagrama representa, de forma gráfica, as principais entidades, atributos, relacionamentos e cardinalidades identificados para a organização, considerando as informações obtidas durante a pesquisa.
+
+O DER está disponibilizado no repositório em dois formatos:
+
+* **Imagem (PNG):** utilizada para visualização do diagrama diretamente no README.
+* **Arquivo Draw.io:** arquivo editável utilizado para a elaboração do diagrama.
 
 ### DER
 
-![Diagrama Entidade-Relacionamento](docs/DER/DER.png)
+![Diagrama Entidade-Relacionamento](docs/DER/image.png)
+
+**Arquivo editável:** [DER.drawio](docs/DER/DER_DML_CONTABILIDADE.drawio)
 
 ---
 
