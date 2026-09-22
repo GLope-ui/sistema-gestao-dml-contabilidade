@@ -1,327 +1,440 @@
-# Sistema de Gestão de Informações - DML CONTABILIDADE LTDA.
-
-## Nome dos Integrantes do Projeto:
-
-* Vinícius Dias Gomes - RGM: 47441081
-* Guilherme de Souza Lopes dos Santos - RGM: 47475609
-* Valquíria Rodrigues de Macedo - RGM: 47415061
-* Gabrielly Witai Pereira - RGM: 47396750
-* Pablo Henrique Lourenço Guimarães - RGM: 47672285
-
-
-
-## Introdução
-
-### Contextualização do Problema
-
-A gestão de informações é uma atividade importante para organizações que precisam manter dados de clientes, serviços e atividades administrativas de forma organizada e consistente. Em uma empresa do setor contábil, a quantidade de informações relacionadas aos clientes e aos serviços prestados torna necessário compreender como esses dados se relacionam.
-
-A DML CONTABILIDADE LTDA. é uma organização do ramo contábil que possui aproximadamente 50 anos de atuação e atende cerca de 100 clientes, entre pessoas físicas e empresas. A organização possui atualmente 7 funcionários e oferece serviços de contabilidade, assessoria empresarial e planejamento tributário.
-
-A partir das informações obtidas por meio de pesquisa de campo, foi realizada a identificação dos principais elementos envolvidos na organização das informações da empresa, com o objetivo de desenvolver um modelo conceitual de dados adequado à realidade observada.
-
-### Objetivos
-
-O objetivo geral deste projeto é desenvolver um modelo conceitual de dados para representar as principais informações e relações existentes na DML CONTABILIDADE LTDA., utilizando como base as informações obtidas durante o levantamento realizado com a organização.
-
-Como objetivos específicos, pretende-se:
-
-* Identificar as principais entidades relacionadas aos processos da organização;
-* Identificar os atributos relevantes para cada entidade;
-* Identificar os relacionamentos existentes entre as entidades;
-* Identificar regras de negócio e restrições relevantes;
-* Elaborar um Diagrama Entidade-Relacionamento (DER) representando a estrutura conceitual dos dados;
-* Documentar e justificar as decisões adotadas na modelagem.
-
-### Delimitação
-
-O projeto está delimitado à elaboração do modelo conceitual de dados da DML CONTABILIDADE LTDA., considerando as informações obtidas durante o levantamento realizado com a organização.
-
-O trabalho contempla a identificação de entidades, atributos, relacionamentos, regras de negócio e demais elementos necessários para a construção do modelo conceitual.
-
-Neste momento, o projeto não contempla a implementação física de um banco de dados ou o desenvolvimento de um sistema computacional completo.
+# Entrega 1 — Modelo Conceitual (DER)
+### Modelagem de um sistema de gestão de informações para uma organização de pequeno porte
 
 ---
 
-# Desenvolvimento
+## Metadados
 
-## Caracterização da Organização
+- **Nomes dos alunos e RGM**
+  - Vinícius Dias Gomes — RGM: 47441081
+  - Guilherme de Souza Lopes dos Santos — RGM: 47475609
+  - Valquíria Rodrigues de Macedo — RGM: 47415061
+  - Gabrielly Witai Pereira — RGM: 47396750
+  - Pablo Henrique Lourenço Guimarães — RGM: 47672285
 
-A organização selecionada para o desenvolvimento do projeto é a **DML CONTABILIDADE LTDA.**, uma empresa do segmento de contabilidade.
+## 1. Caracterização da Organização
 
-Com base nas informações levantadas durante a pesquisa de campo, foram identificadas as seguintes características:
+- **Nome e natureza da organização:** DML CONTABILIDADE LTDA., empresa privada com fins lucrativos do setor de serviços contábeis. Atua na escrituração contábil e fiscal, na assessoria empresarial e no planejamento tributário de pessoas físicas e jurídicas.
 
-| Característica                    | Informação                                                      |
-| --------------------------------- | --------------------------------------------------------------- |
-| Organização                       | DML CONTABILIDADE LTDA.                                         |
-| Tempo de existência               | Aproximadamente 50 anos                                         |
-| Quantidade de funcionários        | 7 funcionários                                                  |
-| Quantidade aproximada de clientes | 100 clientes                                                    |
-| Unidades                          | 1 unidade                                                       |
-| Público atendido                  | Pessoas físicas e empresas                                      |
-| Principais serviços               | Contabilidade, assessoria empresarial e planejamento tributário |
+- **Contexto e porte:** organização com aproximadamente 50 anos de atuação, uma única unidade, 7 funcionários e cerca de 100 clientes ativos, entre pessoas físicas e empresas. A estrutura é dividida entre a diretoria e cargos técnicos (contadores e auxiliares), organizados por departamentos, além de um departamento administrativo e de relacionamento com clientes. O volume de atividades é predominantemente cíclico: serviços mensais, como folha de pagamento e apuração de impostos, e serviços anuais, como a entrega de declarações de imposto de renda de pessoa física. Os documentos chegam por captura automática no ERP contábil (Alterdata) mediante certificado digital A1, por e-mail, por WhatsApp corporativo ou fisicamente, na recepção ou por motoboy.
 
-A estrutura funcional informada é composta por uma área de diretoria e por profissionais responsáveis pelas atividades técnicas, incluindo contadores e auxiliares.
+- **Problemas e necessidades identificados:** a organização não relatou dificuldade em localizar informações, por concentrá-las no ERP contábil e no servidor de arquivos. Os pontos frágeis estão no que não é registrado. Não há registro formal do recebimento de cada documento, nem rotina única de acompanhamento de tarefas: cada setor mantém controle próprio do que está pendente, em andamento ou concluído, e é também nesse controle setorial que se identifica um atraso. Os prazos das obrigações não são registrados em sistema, apenas conhecidos pelos setores, e não existe alerta de prazo próximo, embora o descumprimento gere multa para o cliente. O maior gerador de retrabalho apontado é a coleta de dados para o fechamento da folha de pagamento: as empresas demoram a enviar as informações e frequentemente as enviam com erro, obrigando o setor a refazer o trabalho. Parte dos controles vive fora do sistema, em planilhas Excel de conferência e de faturamento e em documentos Word de contratos.
 
-A organização também possui um departamento administrativo e de relacionamento com clientes, sendo a secretária desse departamento responsável pelo cadastro de novos clientes no sistema de controle interno.
+- **Justificativa da escolha:** a organização foi escolhida por reunir três condições necessárias ao projeto. Primeiro, o acesso: o grupo obteve autorização para realizar a pesquisa de campo e entrevistar o responsável pela empresa. Segundo, o porte adequado, com processos suficientes para gerar um modelo rico — clientes, contratos, serviços, documentos, tarefas, obrigações e cobrança — sem a complexidade de uma organização de grande porte. Terceiro, a existência de lacunas reais de registro, que dão sentido prático à modelagem: o sistema proposto não duplicaria um controle já existente, mas passaria a registrar aquilo que hoje depende da memória e do controle informal de cada setor.
 
----
-
-## Processos de Negócio
-
-A partir das informações obtidas na pesquisa de campo, foi identificado como processo relevante o **cadastro de novos clientes**.
-
-O processo inicia-se quando um novo cliente passa a utilizar os serviços da organização. As informações necessárias são registradas no sistema de controle interno da empresa. O cadastro é realizado pela secretária do departamento administrativo e de relacionamento com clientes.
-
-Também foi identificado que um mesmo cliente pode contratar mais de um serviço oferecido pela organização.
-
-Os principais serviços informados pela organização são:
-
-* Contabilidade;
-* Assessoria empresarial;
-* Planejamento tributário.
-
-O processo e suas etapas poderão ser detalhados posteriormente conforme informações complementares obtidas junto à organização.
+- **Evidências da organização:**
+  - Razão social: DML CONTABILIDADE LTDA.
+  - Responsável pela organização e contato fornecido ao grupo: **Deni Maricato Maciel — TEL (11) 98857-6266**
+  - Levantamento realizado por meio de entrevista estruturada com o responsável, aplicada presencialmente, com registro das respostas no roteiro de perguntas anexado ao repositório.
 
 ---
 
-## Requisitos do Sistema
+## 2. Processos de Negócio
 
-Os requisitos apresentados nesta seção representam, em nível conceitual, as necessidades identificadas a partir do levantamento realizado.
+- **Principais processos mapeados:**
 
-### Requisitos Funcionais
+  **Cadastro de cliente.** A secretária do departamento administrativo e de relacionamento com clientes registra o novo cliente no sistema interno, com os dados cadastrais e fiscais da pessoa física ou da empresa. Cada cliente recebe um código de identificação interno, que é o elemento usado para vincular documentos ao cliente. Alterações societárias ou cadastrais disparam atualização do registro.
 
-**RF01 - Cadastrar clientes**
+  **Contratação de serviços.** O cliente firma contrato com o escritório e, dentro dele, contrata um ou mais serviços. Valor e periodicidade são acordados por contrato, podendo variar entre clientes para o mesmo serviço. O contrato também fixa os prazos de entrega de documentos e de execução.
 
-O sistema deverá permitir o registro dos dados dos clientes da organização.
+  **Recebimento e conferência de documentos.** Os documentos são capturados automaticamente no ERP por certificado digital, recebidos por e-mail ou WhatsApp, ou entregues fisicamente. São identificados pelo código do cliente e conferidos pelo departamento que executará o serviço relacionado. Quando falta documento ou o documento chega incorreto, o setor faz a cobrança ou avisa o cliente do erro.
 
-**RF02 - Consultar clientes**
+  **Execução de serviço e distribuição de tarefas.** A cada competência, o serviço contratado gera uma execução. A execução é desdobrada em tarefas que percorrem os departamentos: recepção, conferência, ações específicas de cada setor, conferência final e retorno ao cliente com o serviço realizado. Uma tarefa pode depender da conclusão de outra, e uma mesma tarefa pode ter mais de um responsável.
 
-O sistema deverá permitir a consulta dos clientes cadastrados.
+  **Revisão.** Nenhum serviço é entregue sem conferência: todos os serviços são revisados dentro de seus departamentos, e o mesmo ocorre antes de uma obrigação ser considerada cumprida.
 
-**RF03 - Registrar serviços**
+  **Controle de obrigações e prazos.** Cada obrigação é acompanhada pelo setor responsável, que detém o controle de prazo e entrega. Os prazos variam conforme a opção tributária de cada cliente e são definidos pelo contrato ou pela legislação. O descumprimento gera multa para a empresa.
 
-O sistema deverá permitir o registro dos serviços oferecidos pela organização.
+  **Faturamento e cobrança.** A cobrança é eletrônica, por boleto bancário, com valores que variam conforme o cliente e os serviços contratados. Os pagamentos são registrados e há controle de pagamentos em atraso.
 
-**RF04 - Associar clientes aos serviços**
-
-O sistema deverá permitir relacionar um cliente aos serviços que ele contrata.
-
-**RF05 - Manter informações dos clientes**
-
-O sistema deverá possibilitar a manutenção das informações cadastrais dos clientes.
-
-> Os requisitos funcionais poderão ser refinados após a análise das informações complementares obtidas na pesquisa de campo e da versão definitiva do modelo conceitual.
-
-### Requisitos Não Funcionais
-
-**RNF01 - Organização dos dados**
-
-As informações deverão ser organizadas de maneira estruturada, permitindo a identificação das relações existentes entre clientes e serviços.
-
-**RNF02 - Integridade das informações**
-
-Os dados registrados deverão manter consistência entre as entidades e seus respectivos relacionamentos.
-
-**RNF03 - Controle de acesso**
-
-As informações do sistema deverão possuir acesso controlado de acordo com as responsabilidades dos usuários da organização.
-
-**RNF04 - Facilidade de consulta**
-
-As informações cadastradas deverão ser estruturadas de forma que possam ser consultadas de maneira eficiente.
-
-> Os requisitos não funcionais apresentados são preliminares e poderão ser ajustados conforme o aprofundamento do levantamento realizado junto à organização.
+- **Fluxogramas:** não foram elaborados nesta entrega; os processos estão descritos textualmente acima e representados de forma estrutural no DER da Seção 7.
 
 ---
 
-## Regras de Negócio
+## 3. Requisitos do Sistema
 
-Com base nas informações levantadas, foram identificadas inicialmente as seguintes regras de negócio:
+### 3.1 Requisitos Funcionais
 
-**RN01 - Cadastro de clientes**
+- **RF01 — Cadastrar clientes.** O sistema deve permitir registrar pessoas físicas e jurídicas, com código interno único, documento fiscal e, para empresas, o regime tributário.
+- **RF02 — Registrar canais de contato.** O sistema deve permitir cadastrar os canais de comunicação de cada cliente (e-mail, telefone, WhatsApp) e indicar o canal preferencial.
+- **RF03 — Controlar certificados digitais.** O sistema deve registrar os certificados digitais dos clientes e suas datas de validade.
+- **RF04 — Registrar contratos e serviços contratados.** O sistema deve permitir registrar o contrato de cada cliente e os serviços nele incluídos, com valor acordado, periodicidade e dia limite de envio de documentos.
+- **RF05 — Gerar e acompanhar execuções de serviço.** O sistema deve registrar a execução de cada serviço contratado por competência, com prazo, data de conclusão e situação.
+- **RF06 — Registrar tarefas e responsáveis.** O sistema deve permitir desdobrar a execução em tarefas, atribuí-las a um ou mais funcionários e registrar dependência entre tarefas.
+- **RF07 — Registrar o recebimento de documentos.** O sistema deve registrar cada documento recebido, seu tipo, sua competência, o meio de recebimento e a data de conferência.
+- **RF08 — Registrar pendências documentais.** O sistema deve permitir registrar documento faltante ou incorreto, a data de identificação, a data e o canal da comunicação ao cliente e a situação da pendência.
+- **RF09 — Controlar obrigações e prazos.** O sistema deve registrar as obrigações de cada cliente, com tipo, competência, prazo, setor responsável e situação.
+- **RF10 — Registrar multas.** O sistema deve registrar as multas decorrentes do descumprimento de prazos, com valor, data e motivo.
+- **RF11 — Registrar revisões.** O sistema deve registrar a revisão de execuções e de obrigações, com revisor, data e resultado.
+- **RF12 — Emitir e controlar faturas.** O sistema deve permitir gerar a fatura do contrato por competência, com valor e vencimento, e registrar o pagamento correspondente.
+- **RF13 — Consultar informações.** O sistema deve permitir consultar clientes, documentos, tarefas, obrigações e cobranças, e identificar itens vencidos sem conclusão.
 
-Todo novo cliente da organização deve possuir um cadastro no sistema de controle interno.
+### 3.2 Requisitos Não Funcionais
 
-**RN02 - Responsável pelo cadastro**
-
-O cadastro de novos clientes é realizado pela secretária do departamento administrativo e de relacionamento com clientes.
-
-**RN03 - Tipos de clientes**
-
-A organização atende tanto pessoas físicas quanto empresas.
-
-**RN04 - Contratação de serviços**
-
-Um cliente pode contratar mais de um serviço oferecido pela organização.
-
-**RN05 - Serviços oferecidos**
-
-A organização oferece serviços de contabilidade, assessoria empresarial e planejamento tributário.
-
-**RN06 - Identificação dos dados**
-
-O cadastro do cliente deve conter os dados empresariais ou cadastrais necessários para a identificação e atendimento do cliente pela organização.
-
-As regras poderão ser ampliadas ou modificadas após a análise das respostas complementares da entrevista.
-
----
-
-# Dicionário de Dados Conceitual
-
-O dicionário de dados apresenta os principais elementos identificados na modelagem conceitual, descrevendo as entidades e seus respectivos atributos. Como o projeto se encontra na etapa de modelagem conceitual, os tipos de dados apresentados possuem caráter preliminar e deverão ser validados conforme a versão definitiva do DER.
-
-## Entidade: Cliente
-
-Representa as pessoas físicas ou empresas que possuem relacionamento com a DML CONTABILIDADE LTDA.
-
-| Atributo     | Tipo conceitual | Obrigatório | Descrição                                                 |
-| ------------ | --------------- | ----------- | --------------------------------------------------------- |
-| ID_Cliente   | Identificador   | Sim         | Identificação única do cliente no sistema                 |
-| Nome         | Texto           | Sim         | Nome completo da pessoa física ou razão social da empresa |
-| Tipo_Cliente | Categórico      | Sim         | Indica se o cliente é pessoa física ou empresa            |
-| CPF_CNPJ     | Identificador   | Sim         | Documento utilizado para identificação do cliente         |
-| Telefone     | Texto           | Não         | Número de telefone para contato com o cliente             |
-| E-mail       | Texto           | Não         | Endereço de e-mail utilizado para comunicação             |
-| Endereço     | Texto           | Não         | Endereço cadastrado para o cliente                        |
-
-> Os atributos acima são preliminares. Os campos definitivos deverão ser confirmados a partir das informações fornecidas pela organização e da estrutura final do DER.
-
-## Entidade: Serviço
-
-Representa os serviços disponibilizados pela DML CONTABILIDADE LTDA.
-
-| Atributo     | Tipo conceitual | Obrigatório | Descrição                                              |
-| ------------ | --------------- | ----------- | ------------------------------------------------------ |
-| ID_Servico   | Identificador   | Sim         | Identificação única do serviço                         |
-| Nome_Servico | Texto           | Sim         | Nome do serviço oferecido                              |
-| Descrição    | Texto           | Não         | Descrição das características ou finalidade do serviço |
-
-Os principais serviços identificados durante o levantamento são:
-
-* Contabilidade;
-* Assessoria empresarial;
-* Planejamento tributário.
-
-## Entidade: Contratação
-
-Representa a associação entre um cliente e um serviço contratado.
-
-| Atributo         | Tipo conceitual | Obrigatório | Descrição                                          |
-| ---------------- | --------------- | ----------- | -------------------------------------------------- |
-| ID_Contratacao   | Identificador   | Sim         | Identificação única da contratação                 |
-| ID_Cliente       | Referência      | Sim         | Identificação do cliente relacionado à contratação |
-| ID_Servico       | Referência      | Sim         | Identificação do serviço contratado                |
-| Data_Contratacao | Data            | Não         | Data em que o serviço foi contratado               |
-| Status           | Categórico      | Não         | Situação atual da contratação                      |
-
-A entidade **Contratação** é considerada na modelagem devido à regra de negócio segundo a qual um cliente pode contratar mais de um serviço.
-
-### Observação sobre o dicionário
-
-O dicionário de dados apresentado possui caráter **preliminar**, pois a definição final dos atributos deve estar alinhada ao DER definitivo e às informações completas obtidas durante o levantamento.
-
-A inclusão, exclusão ou alteração de atributos poderá ocorrer após a validação da modelagem pelo grupo.
+- **RNF01 — Integridade referencial.** O sistema deve impedir registros órfãos: toda execução deve pertencer a um contrato e a um serviço, toda tarefa a uma execução, toda fatura a um contrato.
+- **RNF02 — Controle de acesso por papel.** O acesso deve respeitar a lotação do funcionário: o cadastro de clientes é atribuição do departamento administrativo e as informações financeiras não devem ser alteradas após o lançamento.
+- **RNF03 — Rastreabilidade.** O sistema deve permitir identificar qual funcionário realizou cada alteração relevante, necessidade explicitada pela organização.
+- **RNF04 — Preservação do histórico.** Clientes, contratos e funcionários encerrados devem ser inativados, nunca excluídos, preservando o histórico contábil e fiscal.
+- **RNF05 — Desempenho de consulta.** As consultas por cliente, competência e prazo devem ser respondidas em tempo compatível com o uso diário, apoiadas por índices adequados.
+- **RNF06 — Disponibilidade e backup.** As informações devem estar sujeitas a rotina de backup, prática já adotada pela organização.
+- **RNF07 — Conformidade com a LGPD.** O tratamento dos dados pessoais deve limitar-se às finalidades contratual e legal, com acesso restrito e registro de acesso.
+- **RNF08 — Usabilidade.** A interface deve ser operável por usuários sem formação em tecnologia, refletindo o perfil da equipe da organização.
 
 ---
 
-## Modelagem Conceitual
+## 4. Regras de Negócio
 
-A modelagem conceitual tem como objetivo representar os principais dados envolvidos na organização e os relacionamentos existentes entre eles, sem se preocupar, neste momento, com detalhes específicos de implementação em um Sistema Gerenciador de Banco de Dados.
+- **Regras operacionais:**
 
-Com base nas informações levantadas inicialmente, foram identificados como elementos relevantes:
+  - **RN01.** Todo cliente deve possuir cadastro no sistema interno antes de qualquer serviço ser executado.
+  - **RN02.** Cada cliente possui um código de identificação interno único, usado para vincular documentos ao cliente.
+  - **RN03.** O cadastro e a alteração de clientes são atribuição da secretária do departamento administrativo e de relacionamento com clientes.
+  - **RN04.** Um cliente pode contratar mais de um serviço, e o valor de um mesmo serviço pode variar de cliente para cliente.
+  - **RN05.** Cada cliente tem, ao menos, um responsável dentro do escritório, e cada departamento tem um responsável por sua área; um funcionário pode responder por vários clientes.
+  - **RN06.** Todo funcionário está lotado em um único departamento.
+  - **RN07.** Toda tarefa possui ao menos um responsável, e um mesmo serviço pode envolver mais de um funcionário.
+  - **RN08.** Uma tarefa só pode ser iniciada após a conclusão das tarefas das quais depende.
+  - **RN09.** Nenhum serviço é considerado concluído antes de ser revisado dentro do departamento; a mesma regra vale para as obrigações.
+  - **RN10.** Determinados serviços exigem tipos específicos de documento, e a ausência de documento obrigatório impede a execução.
+  - **RN11.** Documento faltante ou incorreto gera pendência documental, comunicada ao cliente.
+  - **RN12.** Os prazos são definidos pelo contrato ou pela legislação e podem variar conforme a opção tributária do cliente.
+  - **RN13.** O descumprimento de prazo de obrigação pode gerar multa para o cliente.
+  - **RN14.** A cobrança é feita por fatura emitida a partir do contrato e quitada exclusivamente por boleto bancário.
+  - **RN15.** Uma tarefa, execução ou obrigação é considerada atrasada quando o prazo está vencido e a conclusão não foi registrada.
+  - **RN16.** Encerrado o contrato, a documentação é entregue ao novo responsável técnico ou ao proprietário da empresa, e o registro do destino é mantido.
 
-### Entidades
+- **Restrições organizacionais:**
 
-As entidades consideradas inicialmente para a modelagem são:
-
-* **Cliente**: representa as pessoas físicas ou empresas atendidas pela organização.
-* **Serviço**: representa os serviços oferecidos pela DML CONTABILIDADE LTDA.
-* **Contratação**: representa a relação entre o cliente e o serviço contratado.
-
-### Atributos
-
-Os atributos representam as características utilizadas para descrever cada entidade.
-
-A entidade **Cliente** possui atributos relacionados à identificação e aos dados cadastrais do cliente.
-
-A entidade **Serviço** possui atributos relacionados à identificação e à descrição dos serviços oferecidos pela organização.
-
-A entidade **Contratação** possui atributos relacionados à associação entre o cliente e o serviço contratado.
-
-### Relacionamentos
-
-O principal relacionamento identificado é a associação entre **Cliente** e **Serviço** por meio da **Contratação**, considerando que um cliente pode contratar mais de um serviço.
-
-A definição definitiva das cardinalidades deverá ser validada de acordo com o DER desenvolvido pelo grupo e com as regras de negócio levantadas.
-
----
-
-## Diagrama Entidade-Relacionamento (DER)
-
-O Diagrama Entidade-Relacionamento (DER) foi elaborado com base nas informações levantadas durante a pesquisa de campo realizada na **DML Contabilidade LTDA.**
-
-O diagrama representa, de forma gráfica, as principais entidades, atributos, relacionamentos e cardinalidades identificados para a organização, considerando as informações obtidas durante a pesquisa.
-
-O DER está disponibilizado no repositório em dois formatos:
-
-* **Imagem (PNG):** utilizada para visualização do diagrama diretamente no README.
-* **Arquivo Draw.io:** arquivo editável utilizado para a elaboração do diagrama.
-
-### DER
-
-![Diagrama Entidade-Relacionamento](docs/DER/image.png)
-
-**Arquivo editável:** [DER.drawio](docs/DER/DER_DML_CONTABILIDADE.drawio)
+  - **RO01 — Guarda legal de documentos.** A atividade contábil está sujeita a prazos legais de guarda de documentos fiscais e trabalhistas. Isso importa ao modelo porque nenhuma entidade admite exclusão física: encerramentos são representados por data de encerramento e indicador de inatividade.
+  - **RO02 — Informações financeiras não editáveis.** A organização informou que ninguém altera informações financeiras. Isso importa porque o modelo separa FATURA de PAGAMENTO: uma correção é um novo registro, não a edição do anterior.
+  - **RO03 — Restrição de cadastro.** Apenas o departamento administrativo cadastra ou altera clientes, o que exige que o modelo saiba a que departamento cada funcionário pertence.
+  - **RO04 — Rastreabilidade de alterações.** A organização considera importante saber qual funcionário realizou determinada alteração, o que exige identificação individual de acesso.
+  - **RO05 — Dependência de documentos de terceiros.** A execução depende de documentos enviados pelo cliente, fora do controle do escritório. Isso importa porque a pendência documental precisa ser uma entidade própria, e não um simples estado da execução.
+  - **RO06 — Uma única unidade.** A organização possui uma só unidade, o que dispensa entidade de filial no modelo.
 
 ---
 
-## Justificativa Técnica
+## 5. Dicionário de Dados Conceitual (Preliminar)
 
-A modelagem conceitual foi desenvolvida buscando representar os principais elementos relacionados à gestão das informações da DML CONTABILIDADE LTDA.
 
-A entidade **Cliente** permite representar as pessoas físicas e empresas atendidas pela organização, enquanto a entidade **Serviço** representa os serviços disponibilizados pela empresa.
+### CLIENTE
 
-A entidade **Contratação** representa a associação entre clientes e serviços, permitindo registrar quais serviços estão relacionados a cada cliente. Essa estrutura considera a informação levantada de que um mesmo cliente pode contratar mais de um serviço.
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_cliente | Identificador interno do cliente | Identificador; obrigatório e único |
+| codigo_cliente | Código de identificação usado no escritório | Obrigatório e único; é o que vincula documentos ao cliente (RN02) |
+| nome_razao_social | Nome da pessoa física ou razão social da empresa | Obrigatório |
+| tipo_cliente | Natureza do cliente: pessoa física ou jurídica | Obrigatório; determina quais dados e obrigações se aplicam |
+| documento_fiscal | CPF ou CNPJ | Obrigatório e único |
+| regime_tributario | Regime de tributação da empresa | Obrigatório apenas para pessoa jurídica; define prazos (RN12) |
+| status | Situação do cliente no escritório | Obrigatório; encerramento é inativação, nunca exclusão (RO01) |
 
-A separação entre clientes, serviços e contratações contribui para uma organização mais estruturada das informações e evita a necessidade de armazenar repetidamente os dados de um cliente para cada serviço contratado.
+### CONTATO
 
-A definição das entidades, atributos e relacionamentos foi baseada nas informações obtidas durante a pesquisa de campo, buscando representar os processos identificados na organização.
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_contato | Identificador do contato | Identificador |
+| tipo | Canal de comunicação: e-mail, telefone ou WhatsApp | Obrigatório; são os canais oficiais da organização |
+| valor | Endereço ou número correspondente ao canal | Obrigatório |
+| principal | Indica o canal preferencial de comunicação | Apenas um por cliente; usado na comunicação de pendências (RN11) |
 
-As decisões de modelagem poderão ser refinadas após a validação do DER elaborado pelo grupo e a obtenção de informações complementares.
+### CERTIFICADO_DIGITAL
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_certificado | Identificador do certificado | Identificador |
+| tipo | Modelo do certificado (ex.: A1) | Obrigatório |
+| data_emissao | Data de emissão | Obrigatório |
+| data_validade | Data de expiração | Obrigatório; vencido, interrompe a captura automática de documentos |
+| status | Indica se o certificado está em uso | Obrigatório |
+
+### DEPARTAMENTO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_departamento | Identificador do setor | Identificador |
+| nome | Nome do departamento | Obrigatório e único |
+| descricao | Atribuições do setor | Opcional |
+
+### FUNCIONARIO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_funcionario | Identificador do funcionário | Identificador |
+| nome | Nome completo | Obrigatório |
+| cargo | Cargo exercido (diretoria, contador, auxiliar) | Obrigatório |
+| login | Identificação de acesso ao sistema | Obrigatório e único; sustenta a rastreabilidade (RO04) |
+| status | Situação do vínculo | Obrigatório; desligamento preserva o histórico |
+
+### CONTRATO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_contrato | Identificador do contrato | Identificador |
+| data_inicio | Início da vigência | Obrigatório |
+| data_fim | Fim previsto da vigência | Opcional (prazo indeterminado) |
+| data_encerramento | Data efetiva de encerramento | Preenchido apenas no encerramento (RN16) |
+| destino_documentacao | Para quem a documentação foi entregue no encerramento | Obrigatório quando há encerramento (RN16) |
+| status | Situação do contrato | Obrigatório; controla a geração de execuções e faturas |
+
+### SERVICO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_servico | Identificador do serviço | Identificador |
+| nome | Nome do serviço oferecido | Obrigatório e único |
+| descricao | Escopo do serviço | Opcional |
+| periodicidade_padrao | Mensal, anual ou eventual | Obrigatório; base para gerar as execuções |
+| status | Indica se o serviço continua sendo oferecido | Obrigatório |
+
+### INCLUI (relacionamento CONTRATO × SERVIÇO)
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| valor_acordado | Valor negociado para o serviço naquele contrato | Obrigatório; pode variar entre clientes (RN04) |
+| periodicidade_acordada | Periodicidade contratada, que pode diferir da padrão | Obrigatório |
+| dia_limite_envio | Dia limite para o cliente enviar a documentação | Obrigatório; definido em contrato (RN12) |
+| data_inicio | Início da prestação do serviço no contrato | Obrigatório |
+| data_fim | Fim da prestação do serviço no contrato | Opcional |
+| status | Indica se o serviço segue ativo no contrato | Obrigatório |
+
+### EXIGE (relacionamento SERVIÇO × TIPO_DOCUMENTO)
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| obrigatorio | Indica se a falta do documento impede a execução | Obrigatório (RN10) |
+| observacao | Condições particulares da exigência | Opcional |
+
+### EXECUCAO_SERVICO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_execucao | Identificador da execução | Identificador |
+| competencia | Mês/ano de referência | Obrigatório; único por contrato e serviço |
+| data_inicio | Início dos trabalhos | Obrigatório |
+| prazo | Prazo previsto em contrato ou legislação | Obrigatório (RN12) |
+| data_conclusao | Data de conclusão | Vazia enquanto não concluída |
+| status | Situação da execução | Obrigatório; atraso é derivado (RN15) |
+
+### TAREFA
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_tarefa | Identificador da tarefa | Identificador |
+| descricao | Etapa a ser realizada | Obrigatório |
+| data_inicio | Início da tarefa | Obrigatório |
+| prazo | Prazo da etapa | Obrigatório |
+| data_conclusao | Conclusão efetiva | Vazia enquanto pendente |
+| status | Situação da tarefa | Obrigatório; atraso é derivado (RN15) |
+
+### ASSUME (relacionamento FUNCIONÁRIO × TAREFA)
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| papel | Papel exercido na tarefa | Obrigatório; toda tarefa tem ao menos um responsável (RN07) |
+| data_atribuicao | Data da atribuição | Obrigatório |
+
+### RESPONSABILIDADE (relacionamento CLIENTE × FUNCIONÁRIO × DEPARTAMENTO)
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| tipo_responsabilidade | Natureza da responsabilidade pelo cliente | Obrigatório (RN05) |
+| data_inicio | Início do vínculo de responsabilidade | Obrigatório |
+| data_fim | Encerramento do vínculo | Vazio indica responsabilidade vigente |
+
+### REVISAO_EXECUCAO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_revisao_exec | Identificador da revisão | Identificador |
+| data_revisao | Data da conferência | Obrigatório |
+| resultado | Aprovado ou reprovado | Obrigatório; reprovação devolve a execução ao setor (RN09) |
+| observacao | Apontamentos da revisão | Opcional |
+
+### TIPO_DOCUMENTO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_tipo_documento | Identificador do tipo | Identificador |
+| nome | Nome do tipo de documento | Obrigatório e único |
+| descricao | O que o tipo abrange | Opcional |
+
+### DOCUMENTO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_documento | Identificador do documento | Identificador |
+| descricao | Descrição complementar | Opcional |
+| competencia | Mês/ano a que o documento se refere | Obrigatório |
+| data_recebimento | Data de chegada ao escritório | Obrigatório |
+| meio_recebimento | ERP, e-mail, WhatsApp ou entrega física | Obrigatório; são os meios usados pela organização |
+| data_conferencia | Data da conferência pelo setor | Vazia enquanto não conferido |
+| status | Recebido, conferido ou devolvido | Obrigatório |
+
+### PENDENCIA_DOCUMENTAL
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_pendencia | Identificador da pendência | Identificador |
+| tipo_pendencia | Falta de documento ou documento com erro | Obrigatório (RN11) |
+| competencia | Competência a que a pendência se refere | Obrigatório |
+| data_identificacao | Data em que o setor detectou a pendência | Obrigatório |
+| data_comunicacao | Data em que o cliente foi avisado | Vazia enquanto não houver cobrança |
+| canal_comunicacao | Canal usado para avisar o cliente | Opcional; coerente com o contato principal |
+| status | Aberta ou resolvida | Obrigatório |
+
+### TIPO_OBRIGACAO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_tipo_obrigacao | Identificador do tipo | Identificador |
+| nome | Nome da obrigação | Obrigatório e único |
+| descricao | O que a obrigação envolve | Opcional |
+| periodicidade | Mensal, anual ou eventual | Obrigatório |
+| base_legal | Norma ou cláusula que fixa o prazo | Obrigatório (RN12) |
+| pode_gerar_multa | Indica se o descumprimento sujeita a penalidade | Obrigatório (RN13) |
+
+### OBRIGACAO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_obrigacao | Identificador da obrigação | Identificador |
+| competencia | Competência de referência | Obrigatório |
+| prazo | Prazo legal ou contratual | Obrigatório; varia conforme o regime tributário (RN12) |
+| data_conclusao | Data de cumprimento | Vazia enquanto pendente |
+| status | Situação da obrigação | Obrigatório; atraso é derivado (RN15) |
+
+### MULTA
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_multa | Identificador da multa | Identificador |
+| valor | Valor da penalidade | Obrigatório |
+| data_ocorrencia | Data em que a multa foi aplicada | Obrigatório |
+| motivo | Fundamento da penalidade | Obrigatório (RN13) |
+| status | Aberta, paga ou contestada | Obrigatório |
+
+### REVISAO_OBRIGACAO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_revisao_obrig | Identificador da revisão | Identificador |
+| data_revisao | Data da conferência | Obrigatório |
+| resultado | Aprovado ou reprovado | Obrigatório (RN09) |
+| observacao | Apontamentos da revisão | Opcional |
+
+### FATURA
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_fatura | Identificador da fatura | Identificador |
+| competencia | Competência cobrada | Obrigatório; única por contrato |
+| valor_total | Valor total da cobrança do período | Obrigatório (RN04) |
+| data_vencimento | Vencimento do boleto | Obrigatório |
+| status | Aberta, paga, atrasada ou cancelada | Obrigatório; base do controle de inadimplência |
+
+### PAGAMENTO
+
+| Atributo | Descrição | Regra de negócio associada |
+|----------|-----------|------------------------------|
+| id_pagamento | Identificador do pagamento | Identificador |
+| valor_pago | Valor efetivamente recebido | Obrigatório |
+| data_pagamento | Data da compensação | Obrigatório |
+| forma_pagamento | Forma de quitação | Obrigatório; a organização opera apenas com boleto (RN14) |
+| status | Confirmado ou estornado | Obrigatório; correção é novo registro, não edição (RO02) |
 
 ---
 
-## Uso de Inteligência Artificial
+## 6. Modelagem Conceitual (Entidades, Atributos, Relacionamentos)
 
-A Inteligência Artificial foi utilizada como ferramenta de apoio durante o desenvolvimento do projeto.
+- **Entidades reconhecidas:**
 
-Seu uso teve como finalidade auxiliar na organização das informações levantadas, na interpretação dos requisitos da atividade, na estruturação da documentação, na elaboração preliminar do dicionário de dados e na revisão da modelagem conceitual.
+  - **CLIENTE** — pessoa física ou jurídica atendida; é o eixo do modelo, pois documentos, contratos e obrigações partem dele.
+  - **CONTATO** — canais de comunicação do cliente; separado porque um cliente tem vários canais e a comunicação de pendências depende deles.
+  - **CERTIFICADO_DIGITAL** — certificado que viabiliza a captura automática de documentos; tem validade própria, que precisa ser acompanhada.
+  - **CONTRATO** — instrumento que vincula cliente e escritório, com vigência e encerramento.
+  - **SERVICO** — catálogo de serviços oferecidos, com periodicidade padrão.
+  - **EXECUCAO_SERVICO** — ocorrência de um serviço em uma competência; é o que permite falar em prazo e conclusão.
+  - **TAREFA** — etapa departamental da execução, com responsáveis e dependência entre etapas.
+  - **REVISAO_EXECUCAO** — conferência obrigatória antes da entrega do serviço.
+  - **DEPARTAMENTO** — setor que concentra rotinas e prazos; é a unidade organizacional efetiva.
+  - **FUNCIONARIO** — pessoa que executa tarefas, revisa e responde por clientes; concentra também a identificação de acesso.
+  - **TIPO_DOCUMENTO** — classificação dos documentos recebidos.
+  - **DOCUMENTO** — peça enviada pelo cliente e consumida na execução.
+  - **PENDENCIA_DOCUMENTAL** — registro de falta ou erro de documento, com a cobrança feita ao cliente.
+  - **TIPO_OBRIGACAO** — catálogo de obrigações, com base legal e periodicidade.
+  - **OBRIGACAO** — dever concreto de um cliente em uma competência, com prazo e setor responsável.
+  - **MULTA** — penalidade decorrente do descumprimento de prazo.
+  - **REVISAO_OBRIGACAO** — conferência antes de considerar a obrigação cumprida.
+  - **FATURA** — cobrança periódica emitida a partir do contrato.
+  - **PAGAMENTO** — quitação da fatura por boleto bancário.
 
-As informações referentes à organização foram obtidas por meio da pesquisa de campo realizada pelo grupo. A Inteligência Artificial não foi utilizada como fonte primária para as informações específicas da DML CONTABILIDADE LTDA.
+- **Atributos e classificações:** cada entidade reúne atributos de identificação (identificadores e códigos), de caracterização (nomes, tipos e descrições), de temporalidade (datas de início, prazo, conclusão, validade e vencimento) e de situação (indicadores de estado). Os atributos de cada entidade estão detalhados na Seção 5. Três relacionamentos possuem atributos próprios: **INCLUI** (valor e periodicidade acordados, dia limite de envio), **ASSUME** (papel e data de atribuição) e **RESPONSABILIDADE** (tipo de responsabilidade e período).
 
-A utilização da ferramenta ocorreu como apoio ao processo de desenvolvimento, sendo as informações e decisões do projeto analisadas e validadas pelos integrantes do grupo.
+- **Relacionamentos pertinentes:** o cliente possui contatos, certificados, contratos, documentos e obrigações. O contrato inclui serviços — relacionamento N:M com atributos — e gera faturas, quitadas por pagamentos. A execução de serviço vincula-se ao contrato e ao serviço, gera tarefas, consome documentos (N:M) e origina pendências documentais. A tarefa é assumida por funcionários (N:M) e depende recursivamente de outras tarefas. O departamento lota funcionários e responde por obrigações. A responsabilidade sobre o cliente é um relacionamento ternário entre cliente, funcionário e departamento. Execuções e obrigações recebem revisões realizadas por funcionários.
+
+- **Restrições e políticas organizacionais aplicadas ao modelo:** a inexistência de exclusão física (encerramentos são registrados por data e indicador de situação); a impossibilidade de alterar lançamentos financeiros, que leva a tratar correções como novos registros; a restrição de cadastro ao departamento administrativo, que exige a lotação do funcionário no modelo; a rastreabilidade de alterações, atendida pela identificação de acesso do funcionário; e a existência de uma única unidade, que dispensa entidade de filial.
 
 ---
 
-# Conclusão
+## 7. Diagrama Entidade-Relacionamento (DER)
 
-O desenvolvimento deste projeto permitiu realizar o levantamento inicial das informações relacionadas à DML CONTABILIDADE LTDA. e utilizá-las como base para a construção de um modelo conceitual de dados.
+![Diagrama Entidade-Relacionamento](docs/DER/DER_DML_CONTABILIDADE.png)
 
-A partir da pesquisa de campo, foi possível identificar características da organização, seus principais serviços, o processo de cadastro de clientes e algumas regras relacionadas à contratação dos serviços.
+O diagrama utiliza a notação brasileira (Heuser): retângulos representam entidades, losangos representam relacionamentos, elipses representam atributos com o identificador sublinhado, e a cardinalidade é expressa em pares **(mín,máx)** posicionados junto à entidade a que se referem. Linhas tracejadas indicam relacionamentos roteados para reduzir cruzamentos, com a mesma semântica das linhas contínuas.
 
-O modelo conceitual busca representar essas informações de maneira estruturada, facilitando a compreensão dos dados e dos relacionamentos existentes na organização.
+O modelo representa 19 entidades, seus atributos, os relacionamentos entre elas e as cardinalidades mínimas e máximas de cada participação, incluindo um relacionamento ternário (RESPONSABILIDADE), um relacionamento recursivo (DEPENDE_DE, entre tarefas) e três relacionamentos N:M com atributos próprios (INCLUI, EXIGE e ASSUME).
 
-O dicionário de dados complementa a modelagem ao apresentar uma descrição dos principais elementos e atributos considerados no modelo.
-
-A modelagem apresentada poderá ser refinada conforme novas informações sejam obtidas e conforme a validação do DER desenvolvido pelo grupo.
+A escalabilidade está prevista na separação entre catálogo e ocorrência — SERVICO e EXECUCAO_SERVICO, TIPO_OBRIGACAO e OBRIGACAO, TIPO_DOCUMENTO e DOCUMENTO — que permite acrescentar novos serviços, obrigações e tipos de documento sem alterar a estrutura. A integração com as próximas etapas está preparada pela normalização das datas de prazo e conclusão, que sustentam os controles de atraso e os futuros alertas de vencimento.
 
 ---
 
-# Referências Bibliográficas
+## 8. Justificativa Técnica
 
-**DML CONTABILIDADE LTDA.** Informações obtidas por meio de pesquisa de campo e entrevista realizada pelos integrantes do grupo. 2026.
+**Por que separar SERVICO de EXECUCAO_SERVICO.** O serviço é o que o escritório oferece; a execução é o que ele faz em uma competência. Guardar prazo e conclusão no próprio serviço impediria registrar a folha de janeiro e a de fevereiro como fatos distintos. A separação é o que dá sentido ao controle de prazos, hoje mantido informalmente por cada setor. A mesma razão levou a separar TIPO_OBRIGACAO de OBRIGACAO e TIPO_DOCUMENTO de DOCUMENTO.
 
-**ELMASRI, Ramez; NAVATHE, Shamkant B.** Sistemas de Banco de Dados. Pearson.
+**Por que INCLUI é um relacionamento com atributos e não uma entidade.** O valor e a periodicidade não pertencem ao contrato nem ao serviço isoladamente: existem apenas na combinação dos dois, porque um mesmo serviço custa valores diferentes para clientes diferentes. Um relacionamento N:M com atributos expressa exatamente isso. Uma entidade associativa foi considerada e descartada por não acrescentar identidade própria ao fato — a execução, que precisava dela, passou a referenciar diretamente CONTRATO e SERVICO.
 
-**HEUSER, Carlos Alberto.** Projeto de Banco de Dados. Bookman.
+**Por que PENDENCIA_DOCUMENTAL é entidade e não um estado do documento.** A pendência mais frequente relatada é a do documento que não chegou. Um documento inexistente não pode carregar um estado; a falta precisa existir como registro próprio, com data de identificação, canal de comunicação e situação. É esse registro que dá tratamento ao maior gerador de retrabalho apontado pela organização.
+
+**Por que a pendência se liga à execução, e não ao cliente.** O cliente é alcançável por execução → contrato → cliente. Um vínculo direto criaria dois caminhos para o mesmo fato e abriria espaço para inconsistência, sem ganho de informação.
+
+**Por que a cardinalidade mínima importa.** O par (mín,máx) distingue o que é obrigatório do que é opcional, algo que a notação de Chen não mostra. Registrar que CLIENTE participa de RESPONSABILIDADE com (1,n) é declarar a regra de que nenhum cliente fica sem responsável; registrar DT_CONCLUSAO como opcional é declarar que a execução existe antes de terminar.
+
+**Por que o atraso não é atributo.** Armazenar "atrasado" como estado exigiria atualizar todos os registros diariamente e conviveria com dados desatualizados. Atraso é condição derivada de prazo vencido sem conclusão registrada, o que mantém o modelo consistente por construção.
+
+**Por que a revisão foi dividida em duas entidades.** REVISAO_EXECUCAO e REVISAO_OBRIGACAO revisam objetos diferentes. Uma entidade única exigiria um vínculo polimórfico, que o SGBD não consegue validar por integridade referencial. Duas entidades custam um retângulo a mais e garantem a consistência.
+
+**Por que o acesso ficou em FUNCIONARIO.** Uma entidade separada de usuário só se justifica quando há acessos que não correspondem a pessoas da organização, o que não é o caso: são 7 funcionários, todos lotados em departamentos. O login como atributo do funcionário resolve a identificação sem criar uma entidade de relacionamento 1:1.
+
+**Por que a fatura pertence ao contrato.** O valor cobrado nasce dos serviços incluídos no contrato. Ligar a fatura ao contrato preserva esse caminho e evita um vínculo redundante com o cliente. A limitação assumida é que a fatura registra o valor total e não a composição por serviço; se a organização passar a discriminar os serviços no boleto, será necessário reintroduzir uma entidade de item de fatura.
+
+**Por que DEPENDE_DE é recursivo.** A organização descreveu que um departamento assume o serviço depois que outro conclui sua etapa. Como as duas pontas da relação são tarefas, o relacionamento é da entidade com ela mesma, com papéis distintos: tarefa dependente e pré-requisito.
+
+---
+
+## 9. Uso de Inteligência Artificial
+*
+
+| Item | O que registrar |
+|------|------------------|
+| **Ferramenta e etapa** | Claude (Anthropic). Usada em três etapas: (a) redesenho do DER a partir do diagrama elaborado pelo grupo no draw.io, primeiro na notação de Peter Chen e depois na notação brasileira; (b) análise crítica do modelo contra as respostas da entrevista, para identificar inconsistências e lacunas; (c) estruturação deste README e do dicionário de dados em HTML. |
+| **Motivação** | (a) Padronizar graficamente o diagrama e garantir que as cardinalidades estivessem expressas corretamente na notação exigida; (b) confrontar o modelo com o levantamento de campo, verificando se cada resposta da entrevista tinha lugar no modelo; (c) organizar a documentação conforme o esqueleto e o exemplo de dicionário fornecidos pela disciplina. |
+| **Prompt(s) utilizados** | "Com base neste diagrama entidade relacionamento feito no draw.io, você consegue criar uma imagem deste modelo de DER usando o modelo de Peter Chen"; "certo, gere um usando a notação brasileira"; "com base neste documento que contém a base para o dicionário de dados e no arquivo de imagem que eu lhe enviei, busque por inconsistências e liste as soluções para mim"; "certo, revise os seguintes termos: Contrato de Serviço não precisa existir, Pendência Documental não precisa se relacionar duplamente ao cliente, fatura pode estar diretamente ligado ao contrato, a relação Responde_por entre o departamento e a tarefa não precisa existir, os atributos de Usuário devem estar diretamente relacionados ao funcionário, a entidade Perfil não precisa existir, nem o Log"; "use o esqueleto como base e gere o README e um arquivo HTML com o dicionário de dados seguindo o exemplo fornecido". |
+| **Resposta recebida** | A ferramenta produziu as imagens do DER nas duas notações; apontou inconsistências entre o modelo e as respostas da entrevista (pendência documental sem vínculo com o cliente, fatura sem discriminação por serviço, ausência de registro de certificado digital, de canais de contato, de multa e de rastreabilidade de alterações); sugeriu entidades adicionais; e redigiu as seções deste README e a estrutura do dicionário de dados. |
+| **Fontes consultadas e verificadas** | A ferramenta não foi usada como fonte de informação sobre a organização. Todos os dados sobre a DML CONTABILIDADE LTDA. vieram da entrevista aplicada pelo grupo. Cada afirmação incorporada ao texto foi conferida contra o roteiro de perguntas respondido pela empresa; afirmações que não encontravam respaldo nas respostas foram removidas. |
+| **Trechos rejeitados ou corrigidos** | O grupo rejeitou boa parte das entidades propostas na versão intermediária do modelo. Foram descartadas as entidades USUARIO, PERFIL, LOG_ALTERACAO, CONTRATO_SERVICO e ITEM_FATURA, além do relacionamento entre DEPARTAMENTO e TAREFA e do vínculo direto entre PENDENCIA_DOCUMENTAL e CLIENTE. O motivo foi a complexidade desproporcional ao porte da organização e a duplicidade de caminhos entre as mesmas entidades. Os atributos de acesso foram transferidos para FUNCIONARIO. |
+| **Justificativa da escolha final** | O modelo mantido é o que representa os processos efetivamente observados com o menor número de entidades. As sugestões aceitas foram as que corrigiam lacunas concretas do levantamento — certificado digital, canais de contato, multa, prazo de envio de documentos e registro de conferência. As rejeitadas foram as que anteciparam necessidades ainda não manifestadas pela organização. |
+| **Reflexão crítica** | A principal limitação observada foi a tendência da ferramenta a ampliar o modelo, propondo entidades de controle de acesso e auditoria que atendiam a boas práticas genéricas, mas não a uma necessidade declarada por uma empresa de 7 pessoas. Houve também interpretações inferidas a partir do diagrama original, em pontos em que as linhas do desenho eram ambíguas, o que exigiu verificação manual pelo grupo. O uso mais proveitoso foi o de confronto entre o modelo e o roteiro de entrevista, que revelou respostas do levantamento sem representação no DER. |
+
+---
+
+## Resumo dos Pesos
+
+| Dimensão | Peso total |
+|----------|-----------|
+| Conceitual (contexto, requisitos/regras, modelagem, justificativa técnica) | 30% |
+| Procedimental (requisitos, fluxogramas, dicionário de dados, DER) | 50% |
+| Atitudinal (participação, comprometimento, colaboração, autonomia) | 20% |
+
+**Entrega final:** README.md completo + DER + Dicionário de Dados em HTML (com exceção dos cursos GTI) anexado no repositório GitHub do grupo.
