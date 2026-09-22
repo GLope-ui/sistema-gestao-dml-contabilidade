@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang='pt-BR'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Dicionário de Dados — Sistema de Gestão de Informações | DML CONTABILIDADE LTDA.</title><style>
+:root { --tinta:#12202e; --suave:#46586b; --linha:#c9d4de; --fundo:#ffffff; --faixa:#f4f7f9; --dest:#8a3b12; }
+* { box-sizing: border-box; }
+body { margin:0; padding:48px 40px 96px; background:var(--fundo); color:var(--tinta);
+  font-family: Georgia, 'Times New Roman', serif; font-size:16px; line-height:1.6; }
+.wrap { max-width: 1040px; margin:0 auto; }
+h1 { font-size:30px; line-height:1.25; margin:0 0 6px; }
+h2 { font-size:22px; margin:52px 0 14px; padding-bottom:6px; border-bottom:2px solid var(--linha); }
+h3 { font-size:18px; margin:34px 0 10px; letter-spacing:.02em; }
+.sub { color:var(--suave); margin:0 0 6px; }
+table { width:100%; border-collapse:collapse; margin:14px 0 6px; font-size:14.5px; }
+th, td { border:1px solid var(--linha); padding:8px 10px; text-align:left; vertical-align:top; }
+th { background:var(--faixa); font-weight:bold; }
+tbody tr:nth-child(even) { background:#fbfcfd; }
+code, .formal { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size:13.5px; }
+.formal { display:block; background:var(--faixa); border-left:4px solid var(--dest);
+  padding:12px 14px; margin:10px 0; white-space:pre-wrap; word-break:break-word; }
+.leitura { font-size:15px; color:var(--suave); margin:8px 0 4px; }
+.indices { font-size:14px; color:var(--suave); margin:6px 0 0; }
+.nota { font-size:14.5px; background:#fdf8f3; border:1px solid #e8d6c6; padding:10px 12px; margin:10px 0; }
+ul { margin:8px 0 8px 22px; } li { margin:4px 0; }
+@media print { body { padding:0; font-size:12px; } h2 { page-break-after:avoid; }
+  table, .formal { page-break-inside:avoid; } }
+</style></head><body><div class='wrap'>
+<h1>Dicionário de Dados — Sistema de Gestão de Informações</h1>
+<p class='sub'>DML CONTABILIDADE LTDA. — modelo conceitual (Entrega 1)</p>
+<p class='sub'>Versão v1.0 — 17/setembro/2026</p>
+<h2>1. Modelo conceitual</h2>
+<p>O modelo representa um escritório de contabilidade no qual cada cliente mantém um ou mais contratos, cada contrato inclui os serviços acordados e cada serviço é executado por competência. A execução gera tarefas, consome documentos enviados pelo cliente e pode originar pendências documentais. As obrigações legais de cada cliente são acompanhadas separadamente e podem acarretar multas. A cobrança é feita por fatura emitida a partir do contrato.</p>
+<table><thead><tr><th>Entidade</th><th>Relaciona-se com</th><th>Cardinalidade (mín,máx)</th><th>Leitura</th></tr></thead><tbody>
+<tr><td>CLIENTE</td><td>CONTATO</td><td>(0,n) : (1,1)</td><td>um cliente possui vários contatos; todo contato pertence a um único cliente</td></tr>
+<tr><td>CLIENTE</td><td>CERTIFICADO_DIGITAL</td><td>(0,n) : (1,1)</td><td>um cliente pode ter vários certificados ao longo do tempo; todo certificado é de um único cliente</td></tr>
+<tr><td>CLIENTE</td><td>CONTRATO</td><td>(0,n) : (1,1)</td><td>um cliente pode ter vários contratos; todo contrato pertence a um único cliente</td></tr>
+<tr><td>CLIENTE × FUNCIONARIO × DEPARTAMENTO</td><td>RESPONSABILIDADE</td><td>(1,n) : (0,n) : (0,n)</td><td>relacionamento ternário: todo cliente tem ao menos um responsável, por departamento</td></tr>
+<tr><td>DEPARTAMENTO</td><td>FUNCIONARIO</td><td>(0,n) : (1,1)</td><td>um departamento lota vários funcionários; todo funcionário está em um único departamento</td></tr>
+<tr><td>CONTRATO</td><td>SERVICO</td><td>(1,n) : (0,n)</td><td>relacionamento INCLUI, com atributos próprios (valor e periodicidade acordados)</td></tr>
+<tr><td>SERVICO</td><td>TIPO_DOCUMENTO</td><td>(0,n) : (0,n)</td><td>relacionamento EXIGE: define quais documentos cada serviço demanda</td></tr>
+<tr><td>CONTRATO</td><td>EXECUCAO_SERVICO</td><td>(0,n) : (1,1)</td><td>toda execução nasce de um contrato</td></tr>
+<tr><td>SERVICO</td><td>EXECUCAO_SERVICO</td><td>(0,n) : (1,1)</td><td>toda execução refere-se a um único serviço</td></tr>
+<tr><td>EXECUCAO_SERVICO</td><td>TAREFA</td><td>(0,n) : (1,1)</td><td>uma execução é desdobrada em várias tarefas</td></tr>
+<tr><td>FUNCIONARIO</td><td>TAREFA</td><td>(0,n) : (1,n)</td><td>relacionamento ASSUME: toda tarefa tem ao menos um responsável</td></tr>
+<tr><td>TAREFA</td><td>TAREFA</td><td>(0,n) : (0,n)</td><td>relacionamento recursivo DEPENDE_DE (tarefa dependente × pré-requisito)</td></tr>
+<tr><td>EXECUCAO_SERVICO</td><td>REVISAO_EXECUCAO</td><td>(0,n) : (1,1)</td><td>toda revisão refere-se a uma execução</td></tr>
+<tr><td>FUNCIONARIO</td><td>REVISAO_EXECUCAO</td><td>(0,n) : (1,1)</td><td>toda revisão é feita por um funcionário</td></tr>
+<tr><td>EXECUCAO_SERVICO</td><td>PENDENCIA_DOCUMENTAL</td><td>(0,n) : (1,1)</td><td>toda pendência nasce de uma execução</td></tr>
+<tr><td>TIPO_DOCUMENTO</td><td>PENDENCIA_DOCUMENTAL</td><td>(0,n) : (0,1)</td><td>a pendência pode apontar o tipo de documento faltante</td></tr>
+<tr><td>CLIENTE</td><td>DOCUMENTO</td><td>(0,n) : (1,1)</td><td>todo documento é fornecido por um único cliente</td></tr>
+<tr><td>TIPO_DOCUMENTO</td><td>DOCUMENTO</td><td>(0,n) : (1,1)</td><td>todo documento é classificado por um tipo</td></tr>
+<tr><td>DOCUMENTO</td><td>EXECUCAO_SERVICO</td><td>(0,n) : (0,n)</td><td>relacionamento UTILIZA: um documento pode servir a várias execuções</td></tr>
+<tr><td>CLIENTE</td><td>OBRIGACAO</td><td>(0,n) : (1,1)</td><td>toda obrigação pertence a um cliente</td></tr>
+<tr><td>TIPO_OBRIGACAO</td><td>OBRIGACAO</td><td>(0,n) : (1,1)</td><td>toda obrigação é classificada por um tipo</td></tr>
+<tr><td>DEPARTAMENTO</td><td>OBRIGACAO</td><td>(0,n) : (1,1)</td><td>cada obrigação é executada pelo setor responsável</td></tr>
+<tr><td>OBRIGACAO</td><td>MULTA</td><td>(0,n) : (1,1)</td><td>o descumprimento pode gerar uma ou mais multas</td></tr>
+<tr><td>OBRIGACAO</td><td>REVISAO_OBRIGACAO</td><td>(0,n) : (1,1)</td><td>a obrigação é revisada antes de ser considerada concluída</td></tr>
+<tr><td>FUNCIONARIO</td><td>REVISAO_OBRIGACAO</td><td>(0,n) : (1,1)</td><td>toda revisão de obrigação tem um revisor</td></tr>
+<tr><td>CONTRATO</td><td>FATURA</td><td>(0,n) : (1,1)</td><td>toda fatura é emitida a partir de um contrato</td></tr>
+<tr><td>FATURA</td><td>PAGAMENTO</td><td>(0,n) : (1,1)</td><td>todo pagamento quita uma única fatura</td></tr>
+</tbody></table>
+<h3>Definição dos conceitos</h3><ul>
+<li><strong>Cliente</strong> — Pessoa física ou jurídica que contrata os serviços do escritório.</li>
+<li><strong>Contrato</strong> — Instrumento que formaliza a prestação de serviços a um cliente e define prazos e valores.</li>
+<li><strong>Serviço</strong> — Atividade oferecida pelo escritório (contabilidade, assessoria empresarial, planejamento tributário).</li>
+<li><strong>Execução de Serviço</strong> — Ocorrência de um serviço contratado em uma competência específica.</li>
+<li><strong>Tarefa</strong> — Etapa operacional de uma execução, atribuída a um ou mais funcionários.</li>
+<li><strong>Documento</strong> — Peça recebida do cliente e utilizada na execução dos serviços.</li>
+<li><strong>Pendência Documental</strong> — Registro de documento faltante ou incorreto identificado durante a execução.</li>
+<li><strong>Obrigação</strong> — Dever legal ou contratual com prazo, cujo descumprimento pode gerar multa.</li>
+<li><strong>Fatura</strong> — Cobrança periódica emitida a partir do contrato; quitada por um pagamento.</li>
+<li><strong>Revisão</strong> — Conferência realizada por um funcionário antes de considerar concluída uma execução ou obrigação.</li>
+</ul>
+<p>Não há entidade separada de usuário: a identificação de acesso (<code>NM_LOGIN</code>) pertence ao próprio <strong>FUNCIONARIO</strong>, e as permissões seguem o departamento em que ele está lotado.</p>
+<h2>2. Fluxo de dados (visão de DFD)</h2>
+<p>Cliente é cadastrado pela secretaria em <strong>CLIENTE</strong>, com seus <strong>CONTATO</strong> e <strong>CERTIFICADO_DIGITAL</strong> → a contratação gera um <strong>CONTRATO</strong> e, por meio do relacionamento <strong>INCLUI</strong>, registra os serviços acordados com valor e periodicidade → a cada competência nasce uma <strong>EXECUCAO_SERVICO</strong>, desdobrada em <strong>TAREFA</strong> atribuídas a funcionários por <strong>ASSUME</strong> e encadeadas por <strong>DEPENDE_DE</strong> → os documentos recebidos entram em <strong>DOCUMENTO</strong>, são consumidos pela execução e, quando faltam ou chegam com erro, originam <strong>PENDENCIA_DOCUMENTAL</strong> comunicada ao cliente → concluída a execução, ela passa por <strong>REVISAO_EXECUCAO</strong> antes do retorno ao cliente → em paralelo, as <strong>OBRIGACAO</strong> de cada cliente são acompanhadas pelo setor responsável, revisadas em <strong>REVISAO_OBRIGACAO</strong> e, se descumpridas, geram <strong>MULTA</strong> → mensalmente o contrato origina uma <strong>FATURA</strong>, quitada por <strong>PAGAMENTO</strong> via boleto bancário.</p>
+<h2>3. Convenções do dicionário</h2>
+<p><strong>SGBD:</strong> MySQL 8, mecanismo de armazenamento InnoDB — responsável pela persistência, pelo log de transações (redo/undo) e pelo índice primário clusterizado.</p>
+<p><strong>Codificação de caracteres:</strong> utf8mb4 com collation utf8mb4_0900_ai_ci, escolhida por cobrir a acentuação do português sem perda em razões sociais e campos de texto livre, além de qualquer caractere Unicode que apareça em observações.</p>
+<h3>Notação formal (símbolos usados neste dicionário)</h3>
+<table><thead><tr><th>Símbolo</th><th>Significado</th></tr></thead><tbody>
+<tr><td>=</td><td>é composto de</td></tr>
+<tr><td>+</td><td>e (conecta elementos obrigatórios)</td></tr>
+<tr><td>( )</td><td>opcional</td></tr>
+<tr><td>{ }, n{ }m</td><td>iteração, com limite mínimo n e máximo m</td></tr>
+<tr><td>[ | ]</td><td>escolha obrigatória entre alternativas</td></tr>
+<tr><td>/ /</td><td>rótulo de um grupo repetitivo</td></tr>
+<tr><td>@</td><td>identificador (chave primária)</td></tr>
+<tr><td>* *</td><td>comentário, fora da estrutura formal</td></tr>
+</tbody></table>
+<h3>Prefixos</h3>
+<table><thead><tr><th>Prefixo</th><th>Significado</th></tr></thead><tbody>
+<tr><td>NM_</td><td>nome</td></tr>
+<tr><td>DT_</td><td>data</td></tr>
+<tr><td>ID_</td><td>identificador (não sofre operação matemática)</td></tr>
+<tr><td>CD_</td><td>código de domínio</td></tr>
+<tr><td>QT_</td><td>quantidade</td></tr>
+<tr><td>TP_</td><td>tipo (categorização)</td></tr>
+<tr><td>IN_</td><td>indicador booleano</td></tr>
+<tr><td>DS_</td><td>descrição / texto livre</td></tr>
+<tr><td>VL_</td><td>valor monetário</td></tr>
+</tbody></table>
+<p>Além dos sete prefixos-padrão, este dicionário usa <code>DS_</code> (descrição/texto livre), já presente no estudo de caso de referência, e <code>VL_</code> (valor monetário), acrescentado pelo mesmo princípio: separa o valor financeiro da quantidade contável indicada por <code>QT_</code>.</p>
+<p><strong>Versão deste dicionário:</strong> v1.0, 17/setembro/2026. Qualquer alteração de estrutura deve gerar nova revisão registrada nesta seção; a prática atende, ela própria, ao princípio de rastreabilidade exigido pela LGPD (art. 6º, X).</p>
+<p><strong>Atributos derivados:</strong> a condição de <em>atrasado</em> não é armazenada em nenhuma entidade. Ela é calculada como <code>DT_PRAZO &lt; data atual</code> com <code>DT_CONCLUSAO</code> ainda vazia, evitando estado inconsistente entre o dado e a data.</p>
+<p><strong>Exemplos de valores:</strong> quaisquer exemplos citados são fictícios e servem apenas para ilustrar o formato dos campos.</p>
+<h2>4. Dicionário de dados por entidade</h2>
+<h3>CLIENTE</h3>
+<span class='formal'>CLIENTE = @ID_CLIENTE + CD_CLIENTE + NM_RAZAO_SOCIAL + [TP_PF | TP_PJ] + ID_DOCUMENTO_FISCAL + (CD_REGIME_TRIBUTARIO) *apenas para pessoa jurídica* + IN_ATIVO</span>
+<p class='leitura'><strong>Leitura:</strong> CD_CLIENTE é o código interno pelo qual o escritório identifica a quem pertence cada documento; [TP_PF | TP_PJ] exige escolher exatamente uma natureza; CD_REGIME_TRIBUTARIO vem entre ( ) porque só se aplica a pessoa jurídica.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (PK)</td><td>Identificador interno do cliente.</td></tr>
+<tr><td>CD_CLIENTE</td><td>varchar(10)</td><td>Sim (único)</td><td>Código de identificação usado no escritório para vincular documentos ao cliente.</td></tr>
+<tr><td>NM_RAZAO_SOCIAL</td><td>varchar(150)</td><td>Sim</td><td>Nome completo da pessoa física ou razão social da empresa.</td></tr>
+<tr><td>TP_PF | TP_PJ</td><td>char(1) (F, J)</td><td>Sim (escolha)</td><td>Natureza do cliente; determina quais dados cadastrais e obrigações se aplicam.</td></tr>
+<tr><td>ID_DOCUMENTO_FISCAL</td><td>varchar(18)</td><td>Sim (único)</td><td>CPF ou CNPJ; documento oficial de identificação fiscal.</td></tr>
+<tr><td>CD_REGIME_TRIBUTARIO</td><td>varchar(30)</td><td>Não</td><td>Regime de tributação da empresa; define prazos e obrigações aplicáveis.</td></tr>
+<tr><td>IN_ATIVO</td><td>boolean</td><td>Sim</td><td>Indica se o cliente permanece atendido; o encerramento preserva o histórico.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_CLIENTE (clusterizado); índice único em CD_CLIENTE e em ID_DOCUMENTO_FISCAL; índice secundário em NM_RAZAO_SOCIAL.</p>
+<h3>CONTATO</h3>
+<span class='formal'>CONTATO = @ID_CONTATO + ID_CLIENTE + [TP_EMAIL | TP_TELEFONE | TP_WHATSAPP] + DS_VALOR + IN_PRINCIPAL</span>
+<p class='leitura'><strong>Leitura:</strong> A escolha obrigatória entre canais reflete os meios efetivamente usados pela organização; IN_PRINCIPAL marca o canal preferencial para comunicação de pendências.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_CONTATO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do contato.</td></tr>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (FK)</td><td>Cliente titular do contato.</td></tr>
+<tr><td>TP_EMAIL | TP_TELEFONE | TP_WHATSAPP</td><td>varchar(15)</td><td>Sim (escolha)</td><td>Canal de comunicação; o WhatsApp corporativo é meio oficial na organização.</td></tr>
+<tr><td>DS_VALOR</td><td>varchar(120)</td><td>Sim</td><td>Endereço ou número correspondente ao canal.</td></tr>
+<tr><td>IN_PRINCIPAL</td><td>boolean</td><td>Sim</td><td>Indica o canal preferencial; apenas um por cliente.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_CONTATO; índice em ID_CLIENTE.</p>
+<h3>CERTIFICADO_DIGITAL</h3>
+<span class='formal'>CERTIFICADO_DIGITAL = @ID_CERTIFICADO + ID_CLIENTE + TP_CERTIFICADO + DT_EMISSAO + DT_VALIDADE + IN_ATIVO</span>
+<p class='leitura'><strong>Leitura:</strong> O certificado é o que permite a captura automática de notas fiscais; DT_VALIDADE sustenta o alerta de vencimento.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_CERTIFICADO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do certificado.</td></tr>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (FK)</td><td>Cliente titular do certificado.</td></tr>
+<tr><td>TP_CERTIFICADO</td><td>varchar(5)</td><td>Sim</td><td>Modelo do certificado (ex.: A1), que define a forma de instalação e uso.</td></tr>
+<tr><td>DT_EMISSAO</td><td>date</td><td>Sim</td><td>Data de emissão pelo emissor credenciado.</td></tr>
+<tr><td>DT_VALIDADE</td><td>date</td><td>Sim</td><td>Data de expiração; vencido, interrompe a captura automática de documentos.</td></tr>
+<tr><td>IN_ATIVO</td><td>boolean</td><td>Sim</td><td>Indica se o certificado está em uso pelo escritório.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_CERTIFICADO; índice em ID_CLIENTE; índice em DT_VALIDADE (consulta de vencimentos próximos).</p>
+<h3>DEPARTAMENTO</h3>
+<span class='formal'>DEPARTAMENTO = @ID_DEPARTAMENTO + NM_DEPARTAMENTO + (DS_DEPARTAMENTO)</span>
+<p class='leitura'><strong>Leitura:</strong> O departamento é a unidade que concentra rotinas e prazos na organização, e por isso responde por obrigações.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_DEPARTAMENTO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do departamento.</td></tr>
+<tr><td>NM_DEPARTAMENTO</td><td>varchar(60)</td><td>Sim</td><td>Nome do setor (ex.: fiscal, pessoal, administrativo).</td></tr>
+<tr><td>DS_DEPARTAMENTO</td><td>text</td><td>Não</td><td>Descrição das atribuições do setor.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_DEPARTAMENTO; índice único em NM_DEPARTAMENTO.</p>
+<h3>FUNCIONARIO</h3>
+<span class='formal'>FUNCIONARIO = @ID_FUNCIONARIO + ID_DEPARTAMENTO + NM_FUNCIONARIO + CD_CARGO + NM_LOGIN + IN_ATIVO</span>
+<p class='leitura'><strong>Leitura:</strong> NM_LOGIN concentra no próprio funcionário a identificação de acesso, sem entidade separada de usuário.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_FUNCIONARIO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do funcionário.</td></tr>
+<tr><td>ID_DEPARTAMENTO</td><td>integer</td><td>Sim (FK)</td><td>Departamento no qual o funcionário está lotado.</td></tr>
+<tr><td>NM_FUNCIONARIO</td><td>varchar(120)</td><td>Sim</td><td>Nome completo; aparece como responsável por tarefas e revisões.</td></tr>
+<tr><td>CD_CARGO</td><td>varchar(40)</td><td>Sim</td><td>Cargo exercido (ex.: diretoria, contador, auxiliar).</td></tr>
+<tr><td>NM_LOGIN</td><td>varchar(40)</td><td>Sim (único)</td><td>Identificação de acesso ao sistema, base do controle de permissões.</td></tr>
+<tr><td>IN_ATIVO</td><td>boolean</td><td>Sim</td><td>Indica vínculo ativo; o desligamento preserva o histórico de tarefas.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_FUNCIONARIO; índice único em NM_LOGIN; índice em ID_DEPARTAMENTO.</p>
+<h3>RESPONSABILIDADE</h3>
+<span class='formal'>RESPONSABILIDADE = ID_CLIENTE + ID_FUNCIONARIO + ID_DEPARTAMENTO + CD_TIPO_RESPONSABILIDADE + DT_INICIO + (DT_FIM)</span>
+<p class='leitura'><strong>Leitura:</strong> Relacionamento ternário entre CLIENTE, FUNCIONARIO e DEPARTAMENTO. A tripla é o identificador: cada cliente tem um responsável por setor, e DT_FIM em aberto indica a responsabilidade vigente.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (FK)</td><td>Cliente atendido.</td></tr>
+<tr><td>ID_FUNCIONARIO</td><td>integer</td><td>Sim (FK)</td><td>Funcionário responsável.</td></tr>
+<tr><td>ID_DEPARTAMENTO</td><td>integer</td><td>Sim (FK)</td><td>Setor pelo qual essa responsabilidade se exerce.</td></tr>
+<tr><td>CD_TIPO_RESPONSABILIDADE</td><td>varchar(30)</td><td>Sim</td><td>Natureza da responsabilidade (ex.: fiscal, pessoal, atendimento).</td></tr>
+<tr><td>DT_INICIO</td><td>date</td><td>Sim</td><td>Início do vínculo de responsabilidade.</td></tr>
+<tr><td>DT_FIM</td><td>date</td><td>Não</td><td>Encerramento do vínculo; vazio indica responsabilidade em vigor.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK composta (ID_CLIENTE, ID_FUNCIONARIO, ID_DEPARTAMENTO, DT_INICIO); índice em ID_CLIENTE.</p>
+<h3>CONTRATO</h3>
+<span class='formal'>CONTRATO = @ID_CONTRATO + ID_CLIENTE + DT_INICIO + (DT_FIM) + (DT_ENCERRAMENTO) + (DS_DESTINO_DOCUMENTACAO) + [TP_VIGENTE | TP_SUSPENSO | TP_ENCERRADO]</span>
+<p class='leitura'><strong>Leitura:</strong> DS_DESTINO_DOCUMENTACAO registra para quem a documentação foi entregue quando o cliente encerra o contrato, procedimento informado pela organização.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_CONTRATO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do contrato.</td></tr>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (FK)</td><td>Cliente contratante.</td></tr>
+<tr><td>DT_INICIO</td><td>date</td><td>Sim</td><td>Início da vigência.</td></tr>
+<tr><td>DT_FIM</td><td>date</td><td>Não</td><td>Fim previsto da vigência; vazio em contratos por prazo indeterminado.</td></tr>
+<tr><td>DT_ENCERRAMENTO</td><td>date</td><td>Não</td><td>Data efetiva de encerramento, quando ocorre.</td></tr>
+<tr><td>DS_DESTINO_DOCUMENTACAO</td><td>text</td><td>Não</td><td>Destinatário da documentação devolvida no encerramento (novo responsável técnico ou proprietário).</td></tr>
+<tr><td>TP_VIGENTE | TP_SUSPENSO | TP_ENCERRADO</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação do contrato; controla a geração de execuções e faturas.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_CONTRATO; índice em ID_CLIENTE.</p>
+<h3>SERVICO</h3>
+<span class='formal'>SERVICO = @ID_SERVICO + NM_SERVICO + (DS_SERVICO) + [TP_MENSAL | TP_ANUAL | TP_EVENTUAL] + IN_ATIVO</span>
+<p class='leitura'><strong>Leitura:</strong> A periodicidade padrão vem da rotina do escritório: folha e apuração de impostos são mensais; declarações de imposto de renda são anuais.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_SERVICO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do serviço.</td></tr>
+<tr><td>NM_SERVICO</td><td>varchar(80)</td><td>Sim</td><td>Nome do serviço oferecido.</td></tr>
+<tr><td>DS_SERVICO</td><td>text</td><td>Não</td><td>Descrição do escopo do serviço.</td></tr>
+<tr><td>TP_MENSAL | TP_ANUAL | TP_EVENTUAL</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Periodicidade padrão, base para gerar as execuções de cada competência.</td></tr>
+<tr><td>IN_ATIVO</td><td>boolean</td><td>Sim</td><td>Indica se o serviço continua sendo oferecido.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_SERVICO; índice único em NM_SERVICO.</p>
+<h3>INCLUI</h3>
+<span class='formal'>INCLUI = ID_CONTRATO + ID_SERVICO + VL_ACORDADO + [TP_MENSAL | TP_ANUAL | TP_EVENTUAL] + QT_DIA_LIMITE_ENVIO + DT_INICIO + (DT_FIM) + IN_ATIVO</span>
+<p class='leitura'><strong>Leitura:</strong> Relacionamento N:M entre CONTRATO e SERVICO, com atributos próprios. Existe porque o valor e a periodicidade são negociados por contrato, e não fixos por serviço.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_CONTRATO</td><td>integer</td><td>Sim (FK)</td><td>Contrato ao qual o serviço foi agregado.</td></tr>
+<tr><td>ID_SERVICO</td><td>integer</td><td>Sim (FK)</td><td>Serviço contratado.</td></tr>
+<tr><td>VL_ACORDADO</td><td>decimal(10,2)</td><td>Sim</td><td>Valor negociado para esse serviço nesse contrato; pode variar entre clientes.</td></tr>
+<tr><td>TP_MENSAL | TP_ANUAL | TP_EVENTUAL</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Periodicidade acordada, que pode diferir da padrão do serviço.</td></tr>
+<tr><td>QT_DIA_LIMITE_ENVIO</td><td>integer</td><td>Sim</td><td>Dia limite para o cliente enviar a documentação daquela competência.</td></tr>
+<tr><td>DT_INICIO</td><td>date</td><td>Sim</td><td>Início da prestação desse serviço no contrato.</td></tr>
+<tr><td>DT_FIM</td><td>date</td><td>Não</td><td>Fim da prestação; vazio indica serviço ainda ativo no contrato.</td></tr>
+<tr><td>IN_ATIVO</td><td>boolean</td><td>Sim</td><td>Indica se o serviço segue sendo executado para esse contrato.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK composta (ID_CONTRATO, ID_SERVICO, DT_INICIO); índice em ID_SERVICO.</p>
+<h3>EXIGE</h3>
+<span class='formal'>EXIGE = ID_SERVICO + ID_TIPO_DOCUMENTO + IN_OBRIGATORIO + (DS_OBSERVACAO)</span>
+<p class='leitura'><strong>Leitura:</strong> Relacionamento N:M entre SERVICO e TIPO_DOCUMENTO. Registra a dependência documental informada pela organização (&#x27;dependemos muito de documentos para execução&#x27;).</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_SERVICO</td><td>integer</td><td>Sim (FK)</td><td>Serviço que demanda o documento.</td></tr>
+<tr><td>ID_TIPO_DOCUMENTO</td><td>integer</td><td>Sim (FK)</td><td>Tipo de documento exigido.</td></tr>
+<tr><td>IN_OBRIGATORIO</td><td>boolean</td><td>Sim</td><td>Indica se a ausência do documento impede a execução do serviço.</td></tr>
+<tr><td>DS_OBSERVACAO</td><td>text</td><td>Não</td><td>Condições particulares da exigência.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK composta (ID_SERVICO, ID_TIPO_DOCUMENTO).</p>
+<h3>EXECUCAO_SERVICO</h3>
+<span class='formal'>EXECUCAO_SERVICO = @ID_EXECUCAO + ID_CONTRATO + ID_SERVICO + CD_COMPETENCIA + DT_INICIO + DT_PRAZO + (DT_CONCLUSAO) + [TP_PENDENTE | TP_ANDAMENTO | TP_CONCLUIDO]</span>
+<p class='leitura'><strong>Leitura:</strong> CD_COMPETENCIA usa o formato AAAA-MM e é o que distingue uma execução da outra dentro do mesmo contrato e serviço. A condição de atraso não é armazenada: deriva de DT_PRAZO vencida com DT_CONCLUSAO ainda vazia.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_EXECUCAO</td><td>integer</td><td>Sim (PK)</td><td>Identificador da execução.</td></tr>
+<tr><td>ID_CONTRATO</td><td>integer</td><td>Sim (FK)</td><td>Contrato que originou a execução.</td></tr>
+<tr><td>ID_SERVICO</td><td>integer</td><td>Sim (FK)</td><td>Serviço executado.</td></tr>
+<tr><td>CD_COMPETENCIA</td><td>char(7)</td><td>Sim</td><td>Mês/ano de referência (AAAA-MM) da execução.</td></tr>
+<tr><td>DT_INICIO</td><td>date</td><td>Sim</td><td>Data de início dos trabalhos.</td></tr>
+<tr><td>DT_PRAZO</td><td>date</td><td>Sim</td><td>Prazo previsto em contrato ou em legislação.</td></tr>
+<tr><td>DT_CONCLUSAO</td><td>date</td><td>Não</td><td>Data de conclusão; vazia enquanto a execução não termina.</td></tr>
+<tr><td>TP_PENDENTE | TP_ANDAMENTO | TP_CONCLUIDO</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação da execução.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_EXECUCAO; índice único em (ID_CONTRATO, ID_SERVICO, CD_COMPETENCIA); índice em DT_PRAZO.</p>
+<h3>TAREFA</h3>
+<span class='formal'>TAREFA = @ID_TAREFA + ID_EXECUCAO + DS_TAREFA + DT_INICIO + DT_PRAZO + (DT_CONCLUSAO) + [TP_PENDENTE | TP_ANDAMENTO | TP_CONCLUIDA]</span>
+<p class='leitura'><strong>Leitura:</strong> A tarefa representa a etapa departamental do processo (recepção, conferência, ação do setor, conferência final e retorno ao cliente).</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_TAREFA</td><td>integer</td><td>Sim (PK)</td><td>Identificador da tarefa.</td></tr>
+<tr><td>ID_EXECUCAO</td><td>integer</td><td>Sim (FK)</td><td>Execução à qual a tarefa pertence.</td></tr>
+<tr><td>DS_TAREFA</td><td>varchar(200)</td><td>Sim</td><td>Descrição da etapa a ser realizada.</td></tr>
+<tr><td>DT_INICIO</td><td>date</td><td>Sim</td><td>Início da tarefa.</td></tr>
+<tr><td>DT_PRAZO</td><td>date</td><td>Sim</td><td>Prazo da etapa, derivado do prazo da execução.</td></tr>
+<tr><td>DT_CONCLUSAO</td><td>date</td><td>Não</td><td>Conclusão efetiva; vazia enquanto pendente.</td></tr>
+<tr><td>TP_PENDENTE | TP_ANDAMENTO | TP_CONCLUIDA</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação da tarefa.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_TAREFA; índice em ID_EXECUCAO; índice em DT_PRAZO.</p>
+<h3>ASSUME</h3>
+<span class='formal'>ASSUME = ID_FUNCIONARIO + ID_TAREFA + CD_PAPEL + DT_ATRIBUICAO</span>
+<p class='leitura'><strong>Leitura:</strong> Relacionamento N:M entre FUNCIONARIO e TAREFA, com atributos próprios. Toda tarefa tem ao menos um responsável, e mais de um funcionário pode atuar na mesma tarefa.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_FUNCIONARIO</td><td>integer</td><td>Sim (FK)</td><td>Funcionário responsável.</td></tr>
+<tr><td>ID_TAREFA</td><td>integer</td><td>Sim (FK)</td><td>Tarefa atribuída.</td></tr>
+<tr><td>CD_PAPEL</td><td>varchar(30)</td><td>Sim</td><td>Papel exercido (ex.: execução, apoio, conferência).</td></tr>
+<tr><td>DT_ATRIBUICAO</td><td>date</td><td>Sim</td><td>Data em que a atribuição foi feita.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK composta (ID_FUNCIONARIO, ID_TAREFA).</p>
+<h3>DEPENDE_DE</h3>
+<span class='formal'>DEPENDE_DE = ID_TAREFA_DEPENDENTE + ID_TAREFA_PRE_REQUISITO</span>
+<p class='leitura'><strong>Leitura:</strong> Relacionamento recursivo de TAREFA com ela mesma. Representa a regra informada de que um departamento só assume depois que outro conclui sua etapa.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_TAREFA_DEPENDENTE</td><td>integer</td><td>Sim (FK)</td><td>Tarefa que só pode iniciar após a conclusão da outra.</td></tr>
+<tr><td>ID_TAREFA_PRE_REQUISITO</td><td>integer</td><td>Sim (FK)</td><td>Tarefa que precisa estar concluída.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK composta (ID_TAREFA_DEPENDENTE, ID_TAREFA_PRE_REQUISITO).</p>
+<h3>REVISAO_EXECUCAO</h3>
+<span class='formal'>REVISAO_EXECUCAO = @ID_REVISAO_EXEC + ID_EXECUCAO + ID_FUNCIONARIO + DT_REVISAO + [TP_APROVADO | TP_REPROVADO] + (DS_OBSERVACAO)</span>
+<p class='leitura'><strong>Leitura:</strong> Existe porque todos os serviços são revisados dentro de seus departamentos antes da entrega. Uma execução pode receber várias revisões sucessivas.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_REVISAO_EXEC</td><td>integer</td><td>Sim (PK)</td><td>Identificador da revisão.</td></tr>
+<tr><td>ID_EXECUCAO</td><td>integer</td><td>Sim (FK)</td><td>Execução revisada.</td></tr>
+<tr><td>ID_FUNCIONARIO</td><td>integer</td><td>Sim (FK)</td><td>Funcionário que realizou a revisão.</td></tr>
+<tr><td>DT_REVISAO</td><td>date</td><td>Sim</td><td>Data da conferência.</td></tr>
+<tr><td>TP_APROVADO | TP_REPROVADO</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Resultado; reprovação devolve a execução ao setor.</td></tr>
+<tr><td>DS_OBSERVACAO</td><td>text</td><td>Não</td><td>Apontamentos da revisão.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_REVISAO_EXEC; índice em ID_EXECUCAO.</p>
+<h3>TIPO_DOCUMENTO</h3>
+<span class='formal'>TIPO_DOCUMENTO = @ID_TIPO_DOCUMENTO + NM_TIPO_DOCUMENTO + (DS_TIPO_DOCUMENTO)</span>
+<p class='leitura'><strong>Leitura:</strong> Classifica os documentos recebidos e é o que permite dizer, na pendência, qual documento falta.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_TIPO_DOCUMENTO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do tipo.</td></tr>
+<tr><td>NM_TIPO_DOCUMENTO</td><td>varchar(80)</td><td>Sim</td><td>Nome do tipo (ex.: nota fiscal, extrato bancário, folha de ponto).</td></tr>
+<tr><td>DS_TIPO_DOCUMENTO</td><td>text</td><td>Não</td><td>Descrição do que o tipo abrange.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_TIPO_DOCUMENTO; índice único em NM_TIPO_DOCUMENTO.</p>
+<h3>DOCUMENTO</h3>
+<span class='formal'>DOCUMENTO = @ID_DOCUMENTO + ID_CLIENTE + ID_TIPO_DOCUMENTO + (DS_DOCUMENTO) + CD_COMPETENCIA + DT_RECEBIMENTO + [TP_ERP | TP_EMAIL | TP_WHATSAPP | TP_FISICO] + (DT_CONFERENCIA) + [TP_RECEBIDO | TP_CONFERIDO | TP_DEVOLVIDO]</span>
+<p class='leitura'><strong>Leitura:</strong> Os meios de recebimento são os informados pela organização: captura no ERP por certificado digital, e-mail, WhatsApp e entrega física. DT_CONFERENCIA é opcional porque o documento pode estar recebido e ainda não conferido.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_DOCUMENTO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do documento.</td></tr>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (FK)</td><td>Cliente que forneceu o documento.</td></tr>
+<tr><td>ID_TIPO_DOCUMENTO</td><td>integer</td><td>Sim (FK)</td><td>Classificação do documento.</td></tr>
+<tr><td>DS_DOCUMENTO</td><td>text</td><td>Não</td><td>Descrição complementar do documento.</td></tr>
+<tr><td>CD_COMPETENCIA</td><td>char(7)</td><td>Sim</td><td>Mês/ano a que o documento se refere (AAAA-MM).</td></tr>
+<tr><td>DT_RECEBIMENTO</td><td>date</td><td>Sim</td><td>Data em que o documento chegou ao escritório.</td></tr>
+<tr><td>TP_ERP | TP_EMAIL | TP_WHATSAPP | TP_FISICO</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Meio pelo qual o documento foi recebido.</td></tr>
+<tr><td>DT_CONFERENCIA</td><td>date</td><td>Não</td><td>Data da conferência pelo setor que executa o serviço.</td></tr>
+<tr><td>TP_RECEBIDO | TP_CONFERIDO | TP_DEVOLVIDO</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação do documento no fluxo interno.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_DOCUMENTO; índice em (ID_CLIENTE, CD_COMPETENCIA); índice em ID_TIPO_DOCUMENTO.</p>
+<h3>PENDENCIA_DOCUMENTAL</h3>
+<span class='formal'>PENDENCIA_DOCUMENTAL = @ID_PENDENCIA + ID_EXECUCAO + (ID_TIPO_DOCUMENTO) + [TP_FALTA | TP_ERRO] + CD_COMPETENCIA + DT_IDENTIFICACAO + (DT_COMUNICACAO) + (CD_CANAL_COMUNICACAO) + [TP_ABERTA | TP_RESOLVIDA]</span>
+<p class='leitura'><strong>Leitura:</strong> ID_TIPO_DOCUMENTO é opcional porque nem toda pendência aponta um documento específico. O cliente é alcançado pela execução, sem vínculo duplicado.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_PENDENCIA</td><td>integer</td><td>Sim (PK)</td><td>Identificador da pendência.</td></tr>
+<tr><td>ID_EXECUCAO</td><td>integer</td><td>Sim (FK)</td><td>Execução afetada pela falta ou erro.</td></tr>
+<tr><td>ID_TIPO_DOCUMENTO</td><td>integer</td><td>Não (FK)</td><td>Tipo de documento faltante ou incorreto, quando identificado.</td></tr>
+<tr><td>TP_FALTA | TP_ERRO</td><td>varchar(8)</td><td>Sim (escolha)</td><td>Natureza da pendência: documento não enviado ou enviado com erro.</td></tr>
+<tr><td>CD_COMPETENCIA</td><td>char(7)</td><td>Sim</td><td>Competência à qual a pendência se refere.</td></tr>
+<tr><td>DT_IDENTIFICACAO</td><td>date</td><td>Sim</td><td>Data em que o setor detectou a pendência.</td></tr>
+<tr><td>DT_COMUNICACAO</td><td>date</td><td>Não</td><td>Data em que o cliente foi avisado; vazia enquanto não houver cobrança.</td></tr>
+<tr><td>CD_CANAL_COMUNICACAO</td><td>varchar(15)</td><td>Não</td><td>Canal usado para a cobrança (e-mail, WhatsApp, telefone).</td></tr>
+<tr><td>TP_ABERTA | TP_RESOLVIDA</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Situação da pendência.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_PENDENCIA; índice em ID_EXECUCAO; índice em DT_IDENTIFICACAO.</p>
+<h3>TIPO_OBRIGACAO</h3>
+<span class='formal'>TIPO_OBRIGACAO = @ID_TIPO_OBRIGACAO + NM_TIPO_OBRIGACAO + (DS_TIPO_OBRIGACAO) + [TP_MENSAL | TP_ANUAL | TP_EVENTUAL] + DS_BASE_LEGAL + IN_GERA_MULTA</span>
+<p class='leitura'><strong>Leitura:</strong> DS_BASE_LEGAL registra a norma que fixa o prazo, já que os prazos são definidos pelo contrato ou pela legislação própria.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_TIPO_OBRIGACAO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do tipo de obrigação.</td></tr>
+<tr><td>NM_TIPO_OBRIGACAO</td><td>varchar(80)</td><td>Sim</td><td>Nome da obrigação (ex.: entrega de declaração, recolhimento de guia).</td></tr>
+<tr><td>DS_TIPO_OBRIGACAO</td><td>text</td><td>Não</td><td>Descrição do que a obrigação envolve.</td></tr>
+<tr><td>TP_MENSAL | TP_ANUAL | TP_EVENTUAL</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Periodicidade da obrigação.</td></tr>
+<tr><td>DS_BASE_LEGAL</td><td>varchar(200)</td><td>Sim</td><td>Norma ou cláusula contratual que fundamenta o prazo.</td></tr>
+<tr><td>IN_GERA_MULTA</td><td>boolean</td><td>Sim</td><td>Indica se o descumprimento sujeita o cliente a penalidade.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_TIPO_OBRIGACAO; índice único em NM_TIPO_OBRIGACAO.</p>
+<h3>OBRIGACAO</h3>
+<span class='formal'>OBRIGACAO = @ID_OBRIGACAO + ID_CLIENTE + ID_TIPO_OBRIGACAO + ID_DEPARTAMENTO + CD_COMPETENCIA + DT_PRAZO + (DT_CONCLUSAO) + [TP_PENDENTE | TP_ENTREGUE | TP_ATRASADA]</span>
+<p class='leitura'><strong>Leitura:</strong> ID_DEPARTAMENTO materializa a regra de que cada obrigação é executada pelo setor responsável, que detém o controle de prazo e entrega.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_OBRIGACAO</td><td>integer</td><td>Sim (PK)</td><td>Identificador da obrigação.</td></tr>
+<tr><td>ID_CLIENTE</td><td>integer</td><td>Sim (FK)</td><td>Cliente sujeito à obrigação.</td></tr>
+<tr><td>ID_TIPO_OBRIGACAO</td><td>integer</td><td>Sim (FK)</td><td>Classificação da obrigação.</td></tr>
+<tr><td>ID_DEPARTAMENTO</td><td>integer</td><td>Sim (FK)</td><td>Setor responsável pelo cumprimento.</td></tr>
+<tr><td>CD_COMPETENCIA</td><td>char(7)</td><td>Sim</td><td>Competência de referência (AAAA-MM).</td></tr>
+<tr><td>DT_PRAZO</td><td>date</td><td>Sim</td><td>Prazo legal ou contratual de entrega; varia conforme o regime tributário do cliente.</td></tr>
+<tr><td>DT_CONCLUSAO</td><td>date</td><td>Não</td><td>Data de cumprimento; vazia enquanto pendente.</td></tr>
+<tr><td>TP_PENDENTE | TP_ENTREGUE | TP_ATRASADA</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Situação da obrigação.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_OBRIGACAO; índice único em (ID_CLIENTE, ID_TIPO_OBRIGACAO, CD_COMPETENCIA); índice em DT_PRAZO.</p>
+<h3>MULTA</h3>
+<span class='formal'>MULTA = @ID_MULTA + ID_OBRIGACAO + VL_MULTA + DT_OCORRENCIA + DS_MOTIVO + [TP_ABERTA | TP_PAGA | TP_CONTESTADA]</span>
+<p class='leitura'><strong>Leitura:</strong> Registra a consequência informada pela organização: o não cumprimento de prazos gera multa para as empresas. Uma obrigação pode acumular mais de uma penalidade.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_MULTA</td><td>integer</td><td>Sim (PK)</td><td>Identificador da multa.</td></tr>
+<tr><td>ID_OBRIGACAO</td><td>integer</td><td>Sim (FK)</td><td>Obrigação descumprida.</td></tr>
+<tr><td>VL_MULTA</td><td>decimal(10,2)</td><td>Sim</td><td>Valor da penalidade aplicada.</td></tr>
+<tr><td>DT_OCORRENCIA</td><td>date</td><td>Sim</td><td>Data em que a multa foi aplicada.</td></tr>
+<tr><td>DS_MOTIVO</td><td>varchar(200)</td><td>Sim</td><td>Fundamento da penalidade.</td></tr>
+<tr><td>TP_ABERTA | TP_PAGA | TP_CONTESTADA</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação da multa.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_MULTA; índice em ID_OBRIGACAO.</p>
+<h3>REVISAO_OBRIGACAO</h3>
+<span class='formal'>REVISAO_OBRIGACAO = @ID_REVISAO_OBRIG + ID_OBRIGACAO + ID_FUNCIONARIO + DT_REVISAO + [TP_APROVADO | TP_REPROVADO] + (DS_OBSERVACAO)</span>
+<p class='leitura'><strong>Leitura:</strong> Mantida separada da revisão de execução porque revisa outro objeto e responde a outra regra: há conferência antes de a obrigação ser considerada concluída.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_REVISAO_OBRIG</td><td>integer</td><td>Sim (PK)</td><td>Identificador da revisão.</td></tr>
+<tr><td>ID_OBRIGACAO</td><td>integer</td><td>Sim (FK)</td><td>Obrigação revisada.</td></tr>
+<tr><td>ID_FUNCIONARIO</td><td>integer</td><td>Sim (FK)</td><td>Funcionário que revisou.</td></tr>
+<tr><td>DT_REVISAO</td><td>date</td><td>Sim</td><td>Data da conferência.</td></tr>
+<tr><td>TP_APROVADO | TP_REPROVADO</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Resultado da conferência.</td></tr>
+<tr><td>DS_OBSERVACAO</td><td>text</td><td>Não</td><td>Apontamentos da revisão.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_REVISAO_OBRIG; índice em ID_OBRIGACAO.</p>
+<h3>FATURA</h3>
+<span class='formal'>FATURA = @ID_FATURA + ID_CONTRATO + CD_COMPETENCIA + VL_TOTAL + DT_VENCIMENTO + [TP_ABERTA | TP_PAGA | TP_ATRASADA | TP_CANCELADA]</span>
+<p class='leitura'><strong>Leitura:</strong> A fatura nasce do contrato, que é onde o valor dos serviços foi acordado. O atraso é derivado de DT_VENCIMENTO vencida sem pagamento confirmado.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_FATURA</td><td>integer</td><td>Sim (PK)</td><td>Identificador da fatura.</td></tr>
+<tr><td>ID_CONTRATO</td><td>integer</td><td>Sim (FK)</td><td>Contrato que originou a cobrança.</td></tr>
+<tr><td>CD_COMPETENCIA</td><td>char(7)</td><td>Sim</td><td>Competência cobrada (AAAA-MM).</td></tr>
+<tr><td>VL_TOTAL</td><td>decimal(10,2)</td><td>Sim</td><td>Valor total da cobrança do período.</td></tr>
+<tr><td>DT_VENCIMENTO</td><td>date</td><td>Sim</td><td>Data de vencimento do boleto.</td></tr>
+<tr><td>TP_ABERTA | TP_PAGA | TP_ATRASADA | TP_CANCELADA</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação da cobrança, base do controle de inadimplência.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_FATURA; índice único em (ID_CONTRATO, CD_COMPETENCIA); índice em DT_VENCIMENTO.</p>
+<h3>PAGAMENTO</h3>
+<span class='formal'>PAGAMENTO = @ID_PAGAMENTO + ID_FATURA + VL_PAGO + DT_PAGAMENTO + [TP_BOLETO] + [TP_CONFIRMADO | TP_ESTORNADO]</span>
+<p class='leitura'><strong>Leitura:</strong> A forma de pagamento aparece como escolha de um único valor porque a organização opera exclusivamente com boleto bancário; a estrutura permite acrescentar formas sem alterar o modelo.</p>
+<table><thead><tr><th>Atributo</th><th>Tipo físico</th><th>Obrigatório</th><th>Significado e relevância</th></tr></thead><tbody>
+<tr><td>ID_PAGAMENTO</td><td>integer</td><td>Sim (PK)</td><td>Identificador do pagamento.</td></tr>
+<tr><td>ID_FATURA</td><td>integer</td><td>Sim (FK)</td><td>Fatura quitada.</td></tr>
+<tr><td>VL_PAGO</td><td>decimal(10,2)</td><td>Sim</td><td>Valor efetivamente recebido.</td></tr>
+<tr><td>DT_PAGAMENTO</td><td>date</td><td>Sim</td><td>Data da compensação.</td></tr>
+<tr><td>TP_BOLETO</td><td>varchar(10)</td><td>Sim (escolha)</td><td>Forma de pagamento aceita pela organização.</td></tr>
+<tr><td>TP_CONFIRMADO | TP_ESTORNADO</td><td>varchar(12)</td><td>Sim (escolha)</td><td>Situação do pagamento.</td></tr>
+</tbody></table>
+<p class='indices'><strong>Índices:</strong> PK ID_PAGAMENTO; índice em ID_FATURA; índice em DT_PAGAMENTO.</p>
+<h2>5. Log de acesso (metadado operacional)</h2>
+<p>As tabelas ficam sob o mesmo mecanismo de auditoria do SGBD: o plugin <code>audit_log</code> do MySQL, configurado para gravar em formato JSON no caminho definido pela variável de sistema <code>audit_log_file</code>, sob <code>$HOME</code> neste ambiente. Na ausência do plugin, a alternativa é o log geral (<code>general_log=ON</code>, <code>log_output=TABLE</code>), consultável em <code>mysql.general_log</code>. Retenção e rotação do log seguem política própria, independente da retenção dos dados de negócio.</p>
+<p>O log do SGBD é o que atende, nesta etapa, à necessidade levantada de saber qual funcionário realizou determinada alteração. Uma entidade própria de auditoria no modelo conceitual só se justificaria se o escritório precisasse consultar esse histórico pela aplicação, e não pelo banco.</p>
+<h2>6. Acesso por operação e conformidade com a LGPD (metadado administrativo)</h2>
+<table><thead><tr><th>Tabela</th><th>LER</th><th>INSERIR</th><th>ATUALIZAR</th><th>APAGAR</th></tr></thead><tbody>
+<tr><td>CLIENTE / CONTATO / CERTIFICADO_DIGITAL</td><td>Todos os setores</td><td>Administrativo (secretaria)</td><td>Administrativo (secretaria)</td><td>Nenhum papel — inativação ao fim do contrato</td></tr>
+<tr><td>CONTRATO / INCLUI</td><td>Todos os setores</td><td>Diretoria</td><td>Diretoria</td><td>Nenhum papel</td></tr>
+<tr><td>EXECUCAO_SERVICO / TAREFA / ASSUME</td><td>Todos os setores</td><td>Setor responsável</td><td>Setor responsável</td><td>Nenhum papel</td></tr>
+<tr><td>DOCUMENTO / PENDENCIA_DOCUMENTAL</td><td>Todos os setores</td><td>Setor que recebe o documento</td><td>Setor que recebe o documento</td><td>Nenhum papel</td></tr>
+<tr><td>OBRIGACAO / MULTA</td><td>Todos os setores</td><td>Setor responsável</td><td>Setor responsável</td><td>Nenhum papel</td></tr>
+<tr><td>REVISAO_EXECUCAO / REVISAO_OBRIGACAO</td><td>Todos os setores</td><td>Funcionário revisor</td><td>Nenhum papel — nova revisão é novo registro</td><td>Nenhum papel</td></tr>
+<tr><td>FATURA / PAGAMENTO</td><td>Diretoria e administrativo</td><td>Diretoria</td><td>Nenhum papel</td><td>Nenhum papel</td></tr>
+<tr><td>FUNCIONARIO / DEPARTAMENTO</td><td>Todos os setores</td><td>Diretoria</td><td>Diretoria</td><td>Nenhum papel — inativação no desligamento</td></tr>
+</tbody></table>
+<p>CLIENTE, CONTATO, CERTIFICADO_DIGITAL, DOCUMENTO e OBRIGACAO concentram dados pessoais e fiscais de pessoas físicas e de sócios de empresas. O tratamento se ampara na execução do contrato de prestação de serviços (LGPD art. 7º, V) e no cumprimento de obrigação legal ou regulatória do escritório (art. 7º, II), que é a própria razão de ser da atividade contábil.</p>
+<p>O acesso é restrito aos setores envolvidos na execução do serviço, conforme a lotação do funcionário, e toda consulta ou alteração fica registrada no log de acesso (§5), o que sustenta o princípio de responsabilização (art. 6º, X). Nenhum papel possui permissão de exclusão física: cliente, contrato e funcionário são inativados por indicador booleano, preservando o histórico contábil e fiscal, que tem prazo de guarda próprio previsto na legislação. Encerrado o prazo de retenção, os dados devem ser anonimizados, nunca apagados, preservando a estatística sem identificar o titular.</p>
+<p>As informações financeiras (FATURA, PAGAMENTO, MULTA) têm leitura restrita à diretoria e ao administrativo e não admitem alteração após o registro, em linha com a política informada pela organização de que ninguém altera informações financeiras já lançadas.</p>
+</div></body></html>
