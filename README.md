@@ -158,7 +158,7 @@ O dicionário de dados conceitual foi elaborado em formato HTML, contendo as ent
 
 ## 7. Diagrama Entidade-Relacionamento (DER)
 
-![Diagrama Entidade-Relacionamento](docs/DER/DER_DML_CONTABILIDADE.png)
+![Diagrama Entidade-Relacionamento](docs/DER_DML_CONTABILIDADE.png)
 
 O diagrama utiliza a notação brasileira (Heuser): retângulos representam entidades, losangos representam relacionamentos, elipses representam atributos com o identificador sublinhado, e a cardinalidade é expressa em pares **(mín,máx)** posicionados junto à entidade a que se referem. Linhas tracejadas indicam relacionamentos roteados para reduzir cruzamentos, com a mesma semântica das linhas contínuas.
 
