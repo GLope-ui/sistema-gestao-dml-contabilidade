@@ -1,0 +1,316 @@
+-- DER lógico: DML CONTABILIDADE LTDA (PostgreSQL)
+-- Gerado a partir do MER. Tipos, NOT NULL e ON DELETE são sugestões a revisar.
+
+CREATE TABLE cliente (
+  id_cliente INTEGER GENERATED ALWAYS AS IDENTITY,
+  codigo_cliente VARCHAR(20) NOT NULL UNIQUE,
+  nome_razao_social VARCHAR(200) NOT NULL,
+  tipo_cliente VARCHAR(20) NOT NULL,
+  documento_fiscal VARCHAR(18) NOT NULL UNIQUE,
+  regime_tributario VARCHAR(30),
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_cliente PRIMARY KEY (id_cliente)
+);
+
+CREATE TABLE contato (
+  id_contato INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_cliente INT NOT NULL,
+  tipo VARCHAR(20) NOT NULL,
+  valor VARCHAR(150) NOT NULL,
+  principal BOOLEAN NOT NULL DEFAULT FALSE,
+  CONSTRAINT pk_contato PRIMARY KEY (id_contato),
+  CONSTRAINT fk_contato_id_cliente FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente)
+);
+
+CREATE TABLE certificado_digital (
+  id_certificado INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_cliente INT NOT NULL,
+  tipo VARCHAR(20) NOT NULL,
+  data_emissao DATE,
+  data_validade DATE NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_certificado_digital PRIMARY KEY (id_certificado),
+  CONSTRAINT fk_certificado_digital_id_cliente FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente),
+  CONSTRAINT ck_cert_datas CHECK (data_emissao IS NULL OR data_validade >= data_emissao)
+);
+
+CREATE TABLE servico (
+  id_servico INTEGER GENERATED ALWAYS AS IDENTITY,
+  nome VARCHAR(120) NOT NULL UNIQUE,
+  descricao TEXT,
+  periodicidade_padrao VARCHAR(20),
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_servico PRIMARY KEY (id_servico)
+);
+
+CREATE TABLE departamento (
+  id_departamento INTEGER GENERATED ALWAYS AS IDENTITY,
+  nome VARCHAR(100) NOT NULL UNIQUE,
+  descricao TEXT,
+  CONSTRAINT pk_departamento PRIMARY KEY (id_departamento)
+);
+
+CREATE TABLE funcionario (
+  id_funcionario INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_departamento INT NOT NULL,
+  nome VARCHAR(150) NOT NULL,
+  cargo VARCHAR(80),
+  login VARCHAR(60) NOT NULL UNIQUE,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_funcionario PRIMARY KEY (id_funcionario),
+  CONSTRAINT fk_funcionario_id_departamento FOREIGN KEY (id_departamento) REFERENCES departamento (id_departamento)
+);
+
+CREATE TABLE contrato (
+  id_contrato INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_cliente INT NOT NULL,
+  data_inicio DATE NOT NULL,
+  data_fim DATE,
+  data_encerramento DATE,
+  destino_documentacao VARCHAR(150),
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_contrato PRIMARY KEY (id_contrato),
+  CONSTRAINT fk_contrato_id_cliente FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente),
+  CONSTRAINT ck_contrato_datas CHECK (data_fim IS NULL OR data_fim >= data_inicio)
+);
+
+CREATE TABLE contrato_servico (
+  id_contrato INT NOT NULL,
+  id_servico INT NOT NULL,
+  valor_acordado NUMERIC(14,2),
+  periodicidade_acordada VARCHAR(20),
+  dia_limite_envio SMALLINT,
+  data_inicio DATE,
+  data_fim DATE,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_contrato_servico PRIMARY KEY (id_contrato, id_servico),
+  CONSTRAINT fk_contrato_servico_id_contrato FOREIGN KEY (id_contrato) REFERENCES contrato (id_contrato) ON DELETE CASCADE,
+  CONSTRAINT fk_contrato_servico_id_servico FOREIGN KEY (id_servico) REFERENCES servico (id_servico) ON DELETE CASCADE,
+  CONSTRAINT ck_contrato_servico_dia CHECK (dia_limite_envio IS NULL OR dia_limite_envio BETWEEN 1 AND 31)
+);
+
+CREATE TABLE fatura (
+  id_fatura INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_contrato INT NOT NULL,
+  competencia CHAR(7) NOT NULL CHECK (competencia ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'),
+  valor_total NUMERIC(14,2) NOT NULL,
+  data_vencimento DATE NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_fatura PRIMARY KEY (id_fatura),
+  CONSTRAINT fk_fatura_id_contrato FOREIGN KEY (id_contrato) REFERENCES contrato (id_contrato)
+);
+
+CREATE TABLE pagamento (
+  id_pagamento INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_fatura INT NOT NULL,
+  valor_pago NUMERIC(14,2) NOT NULL,
+  data_pagamento DATE NOT NULL,
+  forma_pagamento VARCHAR(30),
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_pagamento PRIMARY KEY (id_pagamento),
+  CONSTRAINT fk_pagamento_id_fatura FOREIGN KEY (id_fatura) REFERENCES fatura (id_fatura)
+);
+
+CREATE TABLE execucao_servico (
+  id_execucao INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_contrato INT NOT NULL,
+  id_servico INT NOT NULL,
+  competencia CHAR(7) NOT NULL CHECK (competencia ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'),
+  data_inicio DATE,
+  prazo DATE NOT NULL,
+  data_conclusao DATE,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_execucao_servico PRIMARY KEY (id_execucao),
+  CONSTRAINT fk_execucao_servico_id_contrato FOREIGN KEY (id_contrato) REFERENCES contrato (id_contrato),
+  CONSTRAINT fk_execucao_servico_id_servico FOREIGN KEY (id_servico) REFERENCES servico (id_servico)
+);
+
+CREATE TABLE tarefa (
+  id_tarefa INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_execucao INT NOT NULL,
+  descricao VARCHAR(255) NOT NULL,
+  data_inicio DATE,
+  prazo DATE,
+  data_conclusao DATE,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_tarefa PRIMARY KEY (id_tarefa),
+  CONSTRAINT fk_tarefa_id_execucao FOREIGN KEY (id_execucao) REFERENCES execucao_servico (id_execucao)
+);
+
+CREATE TABLE tarefa_dependencia (
+  id_tarefa_dependente INT NOT NULL,
+  id_tarefa_pre_requisito INT NOT NULL,
+  CONSTRAINT pk_tarefa_dependencia PRIMARY KEY (id_tarefa_dependente, id_tarefa_pre_requisito),
+  CONSTRAINT fk_tarefa_dependencia_id_tarefa_dependente FOREIGN KEY (id_tarefa_dependente) REFERENCES tarefa (id_tarefa) ON DELETE CASCADE,
+  CONSTRAINT fk_tarefa_dependencia_id_tarefa_pre_requisito FOREIGN KEY (id_tarefa_pre_requisito) REFERENCES tarefa (id_tarefa) ON DELETE CASCADE,
+  CONSTRAINT ck_tarefa_dep_distintas CHECK (id_tarefa_dependente <> id_tarefa_pre_requisito)
+);
+
+CREATE TABLE tarefa_funcionario (
+  id_tarefa INT NOT NULL,
+  id_funcionario INT NOT NULL,
+  papel VARCHAR(40),
+  data_atribuicao DATE,
+  CONSTRAINT pk_tarefa_funcionario PRIMARY KEY (id_tarefa, id_funcionario),
+  CONSTRAINT fk_tarefa_funcionario_id_tarefa FOREIGN KEY (id_tarefa) REFERENCES tarefa (id_tarefa) ON DELETE CASCADE,
+  CONSTRAINT fk_tarefa_funcionario_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario (id_funcionario) ON DELETE CASCADE
+);
+
+CREATE TABLE tipo_documento (
+  id_tipo_documento INTEGER GENERATED ALWAYS AS IDENTITY,
+  nome VARCHAR(100) NOT NULL UNIQUE,
+  descricao TEXT,
+  CONSTRAINT pk_tipo_documento PRIMARY KEY (id_tipo_documento)
+);
+
+CREATE TABLE servico_tipo_documento (
+  id_servico INT NOT NULL,
+  id_tipo_documento INT NOT NULL,
+  obrigatorio BOOLEAN NOT NULL DEFAULT TRUE,
+  observacao TEXT,
+  CONSTRAINT pk_servico_tipo_documento PRIMARY KEY (id_servico, id_tipo_documento),
+  CONSTRAINT fk_servico_tipo_documento_id_servico FOREIGN KEY (id_servico) REFERENCES servico (id_servico) ON DELETE CASCADE,
+  CONSTRAINT fk_servico_tipo_documento_id_tipo_documento FOREIGN KEY (id_tipo_documento) REFERENCES tipo_documento (id_tipo_documento) ON DELETE CASCADE
+);
+
+CREATE TABLE documento (
+  id_documento INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_cliente INT NOT NULL,
+  id_tipo_documento INT NOT NULL,
+  descricao VARCHAR(255),
+  competencia CHAR(7) CHECK (competencia IS NULL OR competencia ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'),
+  data_recebimento DATE,
+  meio_recebimento VARCHAR(30),
+  data_conferencia DATE,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_documento PRIMARY KEY (id_documento),
+  CONSTRAINT fk_documento_id_cliente FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente),
+  CONSTRAINT fk_documento_id_tipo_documento FOREIGN KEY (id_tipo_documento) REFERENCES tipo_documento (id_tipo_documento)
+);
+
+CREATE TABLE execucao_documento (
+  id_execucao INT NOT NULL,
+  id_documento INT NOT NULL,
+  CONSTRAINT pk_execucao_documento PRIMARY KEY (id_execucao, id_documento),
+  CONSTRAINT fk_execucao_documento_id_execucao FOREIGN KEY (id_execucao) REFERENCES execucao_servico (id_execucao) ON DELETE CASCADE,
+  CONSTRAINT fk_execucao_documento_id_documento FOREIGN KEY (id_documento) REFERENCES documento (id_documento) ON DELETE CASCADE
+);
+
+CREATE TABLE pendencia_documental (
+  id_pendencia INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_execucao INT NOT NULL,
+  id_tipo_documento INT,
+  tipo_pendencia VARCHAR(40) NOT NULL,
+  competencia CHAR(7) CHECK (competencia IS NULL OR competencia ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'),
+  data_identificacao DATE NOT NULL,
+  data_comunicacao DATE,
+  canal_comunicacao VARCHAR(30),
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_pendencia_documental PRIMARY KEY (id_pendencia),
+  CONSTRAINT fk_pendencia_documental_id_execucao FOREIGN KEY (id_execucao) REFERENCES execucao_servico (id_execucao),
+  CONSTRAINT fk_pendencia_documental_id_tipo_documento FOREIGN KEY (id_tipo_documento) REFERENCES tipo_documento (id_tipo_documento)
+);
+
+CREATE TABLE revisao_execucao (
+  id_revisao_exec INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_execucao INT NOT NULL,
+  id_funcionario INT NOT NULL,
+  data_revisao DATE NOT NULL,
+  resultado VARCHAR(30) NOT NULL,
+  observacao TEXT,
+  CONSTRAINT pk_revisao_execucao PRIMARY KEY (id_revisao_exec),
+  CONSTRAINT fk_revisao_execucao_id_execucao FOREIGN KEY (id_execucao) REFERENCES execucao_servico (id_execucao),
+  CONSTRAINT fk_revisao_execucao_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario (id_funcionario)
+);
+
+CREATE TABLE tipo_obrigacao (
+  id_tipo_obrigacao INTEGER GENERATED ALWAYS AS IDENTITY,
+  nome VARCHAR(120) NOT NULL UNIQUE,
+  descricao TEXT,
+  periodicidade VARCHAR(20),
+  base_legal VARCHAR(200),
+  pode_gerar_multa BOOLEAN NOT NULL DEFAULT FALSE,
+  CONSTRAINT pk_tipo_obrigacao PRIMARY KEY (id_tipo_obrigacao)
+);
+
+CREATE TABLE obrigacao (
+  id_obrigacao INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_cliente INT NOT NULL,
+  id_tipo_obrigacao INT NOT NULL,
+  id_departamento INT NOT NULL,
+  competencia CHAR(7) NOT NULL CHECK (competencia ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'),
+  prazo DATE NOT NULL,
+  data_conclusao DATE,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_obrigacao PRIMARY KEY (id_obrigacao),
+  CONSTRAINT fk_obrigacao_id_cliente FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente),
+  CONSTRAINT fk_obrigacao_id_tipo_obrigacao FOREIGN KEY (id_tipo_obrigacao) REFERENCES tipo_obrigacao (id_tipo_obrigacao),
+  CONSTRAINT fk_obrigacao_id_departamento FOREIGN KEY (id_departamento) REFERENCES departamento (id_departamento)
+);
+
+CREATE TABLE revisao_obrigacao (
+  id_revisao_obrig INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_obrigacao INT NOT NULL,
+  id_funcionario INT NOT NULL,
+  data_revisao DATE NOT NULL,
+  resultado VARCHAR(30) NOT NULL,
+  observacao TEXT,
+  CONSTRAINT pk_revisao_obrigacao PRIMARY KEY (id_revisao_obrig),
+  CONSTRAINT fk_revisao_obrigacao_id_obrigacao FOREIGN KEY (id_obrigacao) REFERENCES obrigacao (id_obrigacao),
+  CONSTRAINT fk_revisao_obrigacao_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario (id_funcionario)
+);
+
+CREATE TABLE multa (
+  id_multa INTEGER GENERATED ALWAYS AS IDENTITY,
+  id_obrigacao INT NOT NULL,
+  valor NUMERIC(14,2) NOT NULL,
+  data_ocorrencia DATE NOT NULL,
+  motivo VARCHAR(255),
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_multa PRIMARY KEY (id_multa),
+  CONSTRAINT fk_multa_id_obrigacao FOREIGN KEY (id_obrigacao) REFERENCES obrigacao (id_obrigacao)
+);
+
+CREATE TABLE responsabilidade (
+  id_cliente INT NOT NULL,
+  id_funcionario INT NOT NULL,
+  id_departamento INT NOT NULL,
+  data_inicio DATE NOT NULL,
+  tipo_responsabilidade VARCHAR(40) NOT NULL,
+  data_fim DATE,
+  CONSTRAINT pk_responsabilidade PRIMARY KEY (id_cliente, id_funcionario, id_departamento, data_inicio),
+  CONSTRAINT fk_responsabilidade_id_cliente FOREIGN KEY (id_cliente) REFERENCES cliente (id_cliente) ON DELETE CASCADE,
+  CONSTRAINT fk_responsabilidade_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario (id_funcionario) ON DELETE CASCADE,
+  CONSTRAINT fk_responsabilidade_id_departamento FOREIGN KEY (id_departamento) REFERENCES departamento (id_departamento) ON DELETE CASCADE,
+  CONSTRAINT ck_resp_datas CHECK (data_fim IS NULL OR data_fim >= data_inicio)
+);
+
+-- Índices nas chaves estrangeiras
+CREATE INDEX ix_contato_id_cliente ON contato (id_cliente);
+CREATE INDEX ix_certificado_digital_id_cliente ON certificado_digital (id_cliente);
+CREATE INDEX ix_funcionario_id_departamento ON funcionario (id_departamento);
+CREATE INDEX ix_contrato_id_cliente ON contrato (id_cliente);
+CREATE INDEX ix_contrato_servico_id_servico ON contrato_servico (id_servico);
+CREATE INDEX ix_fatura_id_contrato ON fatura (id_contrato);
+CREATE INDEX ix_pagamento_id_fatura ON pagamento (id_fatura);
+CREATE INDEX ix_execucao_servico_id_contrato ON execucao_servico (id_contrato);
+CREATE INDEX ix_execucao_servico_id_servico ON execucao_servico (id_servico);
+CREATE INDEX ix_tarefa_id_execucao ON tarefa (id_execucao);
+CREATE INDEX ix_tarefa_dependencia_id_tarefa_pre_requisito ON tarefa_dependencia (id_tarefa_pre_requisito);
+CREATE INDEX ix_tarefa_funcionario_id_funcionario ON tarefa_funcionario (id_funcionario);
+CREATE INDEX ix_servico_tipo_documento_id_tipo_documento ON servico_tipo_documento (id_tipo_documento);
+CREATE INDEX ix_documento_id_cliente ON documento (id_cliente);
+CREATE INDEX ix_documento_id_tipo_documento ON documento (id_tipo_documento);
+CREATE INDEX ix_execucao_documento_id_documento ON execucao_documento (id_documento);
+CREATE INDEX ix_pendencia_documental_id_execucao ON pendencia_documental (id_execucao);
+CREATE INDEX ix_pendencia_documental_id_tipo_documento ON pendencia_documental (id_tipo_documento);
+CREATE INDEX ix_revisao_execucao_id_execucao ON revisao_execucao (id_execucao);
+CREATE INDEX ix_revisao_execucao_id_funcionario ON revisao_execucao (id_funcionario);
+CREATE INDEX ix_obrigacao_id_cliente ON obrigacao (id_cliente);
+CREATE INDEX ix_obrigacao_id_tipo_obrigacao ON obrigacao (id_tipo_obrigacao);
+CREATE INDEX ix_obrigacao_id_departamento ON obrigacao (id_departamento);
+CREATE INDEX ix_revisao_obrigacao_id_obrigacao ON revisao_obrigacao (id_obrigacao);
+CREATE INDEX ix_revisao_obrigacao_id_funcionario ON revisao_obrigacao (id_funcionario);
+CREATE INDEX ix_multa_id_obrigacao ON multa (id_obrigacao);
+CREATE INDEX ix_responsabilidade_id_funcionario ON responsabilidade (id_funcionario);
+CREATE INDEX ix_responsabilidade_id_departamento ON responsabilidade (id_departamento);
