@@ -1,0 +1,39 @@
+Perguntas
+
+1 a 4
+
+COMPRAS:
+
+São feitas compras de papelaria, material de escritório, compras necessárias, café, agua, papel higiênico, filtro de papel, papel toalha.
+É feita uma relação de compra, que chega ao dono, que dependendo autoriza, geram o boleto, e o próprio dono paga.
+
+Software, o dono que faz, ele avalia e faz a compra quando necessário, certificado digital vê conforme a necessidade, seja cliente ou nao, porem o pessoal do dono e do escritório é feita uma renovação por meio de uma parceria entre o escritório e a empresa dono do serviço.
+Contas e despesas, o dono que faz o pagamento, por ser uma empresa de pequena/media porte.  
+
+
+5 a 7
+Encerramento de contrato, pode ser feito tanto pelo escritório quanto pelo cliente..
+Pelo escritório quando: O cliente nao cumpre com as obrigações dele, ou ele esta inadimplente, ou ele esta atuando e desacordo com a legislação, quando é visto que esta desacordo com a legislação e pode colocar em risco ou prejudicar o escritório, é de responsabilidade técnica do dono, encerra contrato do cliente, se o cliente pede a rescisão com o escritório, ele manda a comunicação por e-mail, notifica o escritório, diretamente para o dono ou secretaria, então tem um prazo, relaciona a documentação, faz a entrega de grande parte da documentação por e-mail. Enviando para ou o cliente ou o contador atual.
+E a documentação física é entrega por moto frete ou o novo contator busca
+
+
+8 a 10
+
+Certificados Digitais 
+O escritório tem um controle, uma planilha de controle de vencimento, um mês antes do vencimento, o cliente é comunicado que a certificadora vai entrar em contato, a certificadora parceira do escritório, tambem tem o controle, então é renovado automaticamente com o cliente.
+
+
+11 a 13
+
+Gestão de Pessoas
+Quando o funcionário entra, já entra com o departamento definido, por meio da especialização dele, seja qual for, já é conhecido para onde é alocado, quando muda alguém, quando uma sai e outra entra, é simples substituição e execução de tarefa.
+
+14 a 16
+
+Pagamento de faturas
+O escritório tem datas de vencimentos variáveis, durante o mês, seja dia 5, 10, 15 ou 30, o cliente escolhe qual a melhor data, quando é paga até o vencimento é liberado baixa automática, se passa do vencimento tem multa de 2% e 0,3% de juros ao dia. De acordo com a legislação.
+
+17 a 18
+
+LGPD
+o escritório tem clausulas LGPD no contrato, onde o dono é o responsável interno pela LGPD, o escritório tem restrições de acessos, principalmente pois eles que cuidam, documentos são descartados nem todos tem acesso, todos do escritório tem senha, além dessa proteção, tem proteção contratual.
