@@ -1,219 +1,409 @@
-# Entrega 1 — Modelo Conceitual (DER)
-### Modelagem de um sistema de gestão de informações para uma organização de pequeno porte
+# Entrega 2 — Modelo Lógico, Implementação SQL e Apresentação Final
+### Sistema de Gestão de Informações — DML CONTABILIDADE LTDA.
+
+> **Projeto acadêmico; dados de teste integralmente fictícios.** Este README documenta o esquema relacional implementado e a investigação realizada com a organização. O projeto é um **banco de dados com consultas**, não um software já implantado no escritório. A existência de campos ou consultas não implica envio automático de alertas, controle de permissões, trilhas automáticas de auditoria nem integração com o ERP.
+
+## 1. Relatório Técnico Final
+
+### Integrantes
+| Nome completo | RGM | Usuário do GitHub |
+|---|---|---|
+| Vinícius Dias Gomes | 47441081 | [Vinicius-941](https://github.com/Vinicius-941) |
+| Guilherme de Souza Lopes dos Santos | 47475609 | [GLope-ui](https://github.com/GLope-ui) |
+| Valquíria Rodrigues de Macedo | 47415061 | [ValRodMac2808](https://github.com/ValRodMac2808) |
+| Gabrielly Witai Pereira | 47396750 | [Gabwitai](https://github.com/Gabwitai) |
+| Pablo Henrique Lourenço Guimarães | 47672285 | [PabloHenrique2008](https://github.com/PabloHenrique2008) |
+
+### 1.1 Revisão do Modelo Conceitual
+
+#### Caracterização e escopo
+A **DML CONTABILIDADE LTDA.** é uma empresa privada de serviços contábeis, fiscais, societários e de apoio a rotinas trabalhistas. Seu [site institucional](https://www.dmlcontabilidade.com.br/) informa atuação desde 1976. O escritório está situado na **Av. Guapira, 539, Tucuruvi, São Paulo/SP, CEP 02265-001**, e mantém **uma unidade**, com cerca de **7 funcionários** e **100 clientes ativos**, entre pessoas físicas e jurídicas, segundo o levantamento de campo. O contato institucional divulgado é **(11) 98857-6266**, também informado para o responsável pela organização, **Deni Maricato Maciel**, proprietário/sócio-diretor.
+
+A organização foi escolhida pela possibilidade de acesso ao responsável e por possuir rotinas integradas de atendimento, faturamento, documentação, prazos e compras adequadas a um projeto relacional. **Não há vínculo familiar ou trabalhista entre os integrantes do grupo e a DML**. A existência da organização pode ser conferida pelo endereço e pelo site, complementados pela evidência da videochamada disponível neste repositório. Utiliza o ERP contábil Alterdata; documentos podem chegar por captura vinculada a certificado digital A1, e-mail, WhatsApp corporativo e entrega física. Planilhas Excel e documentos Word complementam os controles de faturamento, conferência e contratos.
+
+**Problemas informacionais observados/relatados:**
+
+- **P01:** Ausência de registro formal e padronizado do recebimento e da conferência de cada documento.
+- **P02:** Acompanhamento de tarefas disperso entre departamentos, sem visão única de pendências, andamento e atrasos.
+- **P03:** Prazos de obrigações controlados de modo descentralizado, sem mecanismo sistematizado de consulta de vencimentos iminentes.
+- **P04:** Informações do cliente ausentes, tardias ou incorretas geram pendências e retrabalho, sobretudo na folha de pagamento.
+- **P05:** Conferência de faturamento e cobrança apoiada em controles paralelos, dificultando visão consolidada de valores emitidos e recebidos.
+
+A organização **não** relatou dificuldade geral para localizar arquivos: o ERP e o servidor já concentram informações. Esse aspecto não foi classificado como problema no escopo do projeto. O escopo contempla clientes, equipe, contratos, serviços, documentos, tarefas, revisões, obrigações, multas, faturamento e pagamentos, além de compras, fornecedores, contas a pagar, encerramento contratual e renovação de certificados. **Compras e certificados são processos complementares mapeados**, não problemas adicionais presumidos.
+
+#### Levantamento de campo e atualização após a Entrega 1
+O levantamento foi realizado em **três etapas**: **03/09/2026 (presencial)**, **15/09/2026 (videochamada)** e **26/10/2026 (mensagens)**. A primeira etapa iniciou o roteiro, que foi completado na segunda; a terceira incluiu **18 perguntas complementares** sobre compras, contas a pagar, encerramento de contrato, certificado digital, distribuição de funcionários, inadimplência e proteção de dados. **Somente Valquíria Rodrigues de Macedo participou das entrevistas pelo grupo; Deni Maricato Maciel, proprietário, respondeu a todas.** O encontro de 03/09 ocorreu presencialmente no escritório da Av. Guapira, 539. A continuidade de 15/09 ocorreu integralmente por videochamada, e o levantamento complementar de 26/10 foi respondido por mensagens/áudios. O grupo não possui registro escrito de achados de observação presencial independentes das declarações do entrevistado; portanto, descrições das rotinas abaixo são atribuídas às respostas de Deni, sem apresentar observações não documentadas como fatos presenciados. As respostas descritas abaixo são provenientes desse levantamento, enquanto os controles propostos são decisões de projeto, não funcionalidades já implantadas.
+
+- **Compras e despesas:** são adquiridos materiais de escritório, água, café, higiene, licenças e serviços necessários. Um funcionário solicita; o proprietário decide sobre a autorização, e o próprio proprietário realiza os pagamentos. Uma solicitação pode ter vários itens. Despesas podem estar relacionadas a uma solicitação ou ser registradas diretamente, como contas periódicas.
+- **Encerramento de contrato:** pode ser solicitado pelo cliente por e-mail ou iniciado pelo escritório em situações como descumprimento contratual, inadimplência ou riscos à responsabilidade profissional. A documentação é encaminhada por e-mail, motofrete ou retirada, com registro de destino.
+- **Certificados digitais:** a validade é acompanhada em planilha; o escritório avisa o cliente aproximadamente um mês antes do vencimento e uma certificadora parceira conduz o processo de renovação. O banco registra validade, aviso, solicitação e estado da renovação, mas **não realiza a renovação**.
+- **Equipe:** as pessoas são distribuídas por departamento conforme especialidade; substituições são possíveis. A alocação é representada por lotação e responsabilidade sobre clientes.
+- **Cobrança:** vencimentos podem ocorrer nos dias 5, 10, 15 ou 30, conforme acerto com o cliente. Foram relatadas multa contratual de 2% e taxa de juros de 0,3% ao dia em atraso. Esses percentuais são **relato da entrevista**, não validação jurídica nem prova de que o script aplica o encargo automaticamente.
+- **Dados pessoais:** a empresa relatou cláusulas contratuais, acessos restritos e proteção por senhas. O modelo não implementa sozinho autenticação, autorização de acesso ou um programa completo de adequação à LGPD.
+
+**Evidências do levantamento:** a divulgação da captura da videochamada foi autorizada pelos participantes, conforme informação do grupo. A captura da videochamada de 15/09/2026 está disponível em [`docs/evidencias/entrevista_videochamada_15-09-2026.png`](docs/evidencias/entrevista_videochamada_15-09-2026.png). As respostas da entrevista de 26/10/2026 foram obtidas por mensagens de áudio, cujos arquivos não integram o repositório público. Conforme orientação relatada pelo grupo, a ausência de fotografia da entrevista presencial foi discutida previamente com o professor. A metodologia e as evidências estão descritas em [`levantamento/levantamento.md`](levantamento/levantamento.md).
+
+**Revisões no DER e no modelo:**
+| Situação identificada | Revisão adotada | Justificativa |
+|---|---|---|
+| Rotinas de compras e contas a pagar não estavam representadas | Inclusão de `fornecedor`, `solicitacao_compra`, `item_compra`, `conta_pagar`, `pagamento_despesa` | Representar autorização, itens, cobrança de fornecedor e quitação |
+| Encerramento de contrato sem todos os elementos de rastreio | Inclusão de motivo, solicitante, data da solicitação, data e meio de entrega | Documentar decisão e destino da documentação |
+| Controle de certificado limitado à emissão/validade | Inclusão de data do aviso, data da solicitação e estado de renovação | Acompanhar a comunicação e a renovação |
+| Processo de compras exigia dois papéis sobre a mesma pessoa | Duas FKs da solicitação para funcionário, solicitante e aprovador | Preservar o papel desempenhado em cada operação |
+| Regras de vínculo entre serviços e documentos | Tabelas associativas para relacionamentos N:N | Evitar listas multivaloradas e registrar atributos dos vínculos |
+
+**Tratamento dos apontamentos recebidos na avaliação da Entrega 1:**
+
+| Apontamento da avaliação | Correção na Entrega 2 | Evidência no projeto |
+|---|---|---|
+| Caracterização sem endereço e comprovação externa suficientes | Inclusão do endereço completo, site e contato institucional; evidência da videochamada ligada no texto | Seção 1.1 e `docs/evidencias/` |
+| Texto descrevia apenas entrevista presencial, mas foto era de videochamada | Datas e meios das três etapas diferenciados | Seção 1.1 e `levantamento/levantamento.md` |
+| Entrevista original não anexada como levantamento organizado | Documento de síntese do levantamento separado do README; preservação do roteiro bruto como fonte, quando anexado | `levantamento/levantamento.md` |
+| Processo de compras/despesas não descrito | Inclusão de solicitação, aprovação, itens, fornecedores, contas e pagamentos | Processo 7, RF14–RF17, RN17–RN20 e cinco tabelas novas |
+| Encerramento contratual só aparecia em regra | Processo completo de solicitação e entrega de documentação, com datas, solicitante e meio | Processo 2, RF04/RF18 e `contrato` |
+| Controle e renovação de certificados só apareciam em requisitos | Processo de acompanhamento de validade, aviso e renovação por parceiro | Processo 8, RF03 e `certificado_digital` |
+| Gestão de pessoal com descrição parcial | Lotação por departamento, responsabilidade por cliente e possibilidade de substituição | Processo 1 e processo 9; `funcionario` e `responsabilidade` |
+| Política de inadimplência não estava explicitada | Registro de vencimento, saldo e percentuais contratuais informados, com separação entre consulta e cobrança automática | Processo 6 e seção 1.5 |
+| Limites de segurança e LGPD precisam ser explicitados | Distinção entre cláusulas/medidas relatadas e controles não implementados pelo SQL | RNF02/RNF07 e seção 1.5 |
+
+A correção da Entrega 1 reconheceu a adequação do DER original, do dicionário e dos requisitos principais. A revisão preservou essa base e estendeu os processos cuja cobertura havia sido considerada parcial ou ausente.
+#### Processos de negócio
+1. **Cadastro, canais e responsável:** cadastro de cliente PF/PJ com código interno e documento fiscal; canais de contato por cliente e atribuição de funcionários/departamentos.
+2. **Contratação e encerramento:** contrato com situação e datas; serviços contratados com valores/periodicidades próprios; registro de solicitação e conclusão de encerramento, destino e entrega da documentação.
+3. **Documentos:** registro de tipo, competência, canal e conferência. A ausência/incorreção gera pendência ligada à execução.
+4. **Execução e revisão:** execução do serviço contratado por competência, geração de tarefas com responsáveis e dependências e revisão antes de concluir.
+5. **Obrigações:** associação a cliente, tipo, competência, departamento, prazo, conferência e eventual multa.
+6. **Faturamento:** emissão de fatura por contrato e competência, registro de pagamentos e cálculo de valores recebidos/em aberto.
+7. **Compras e despesas:** solicitação por funcionário, decisão do proprietário, itens da compra, fornecedor, conta a pagar, pagamento e agente responsável.
+8. **Certificados digitais:** acompanhamento de emissão e validade, identificação de certificados próximos de vencer, aviso ao cliente aproximadamente 30 dias antes do término, solicitação de renovação e acompanhamento do estado até a atuação da certificadora parceira. O aviso e a renovação são atividades organizacionais; o SQL permite consultá-las, não as executa automaticamente.
+9. **Equipe e responsabilidades:** contratação e lotação de funcionário em departamento conforme especialidade, atribuição de responsáveis por cliente e período e substituição quando necessário. O modelo registra lotação e vigência, sem motor de escalas ou folha de pagamento dos próprios funcionários.
+
+**Inadimplência no faturamento:** a emissão de boleto segue o vencimento pactuado (dias 5, 10, 15 ou 30). Pagamentos confirmados reduzem o saldo em aberto; para pagamentos em atraso, foram relatados multa contratual de 2% e juros de 0,3% ao dia. Esses valores são tratados como informação declarada na etapa mais recente do levantamento, não como regra jurídica universal nem funcionalidade automática implementada. Um registro antigo no repositório menciona 0,33% ao dia; a divergência não altera o modelo e deve ser confirmada com o responsável antes de eventual cálculo efetivo de encargos.
+
+#### Requisitos funcionais
+- **RF01:** Registrar cliente com código interno, nome/razão social, tipo PF/PJ, documento fiscal, regime tributário aplicável e situação.
+- **RF02:** Registrar múltiplos contatos e canal preferencial de cada cliente.
+- **RF03:** Registrar certificado digital por cliente, tipo, datas de emissão/validade, situação, aviso e solicitação de renovação.
+- **RF04:** Registrar contrato com datas, situação, encerramento e destino documental, além dos serviços e respectivas condições negociadas.
+- **RF05:** Registrar execuções de serviço por contrato, serviço, competência, prazos, situação e conclusão.
+- **RF06:** Registrar tarefas, responsáveis, papéis, atribuições e dependências entre tarefas.
+- **RF07:** Registrar documentos por cliente, tipo, competência, recebimento, situação e conferência.
+- **RF08:** Registrar pendências documentais por execução, tipo, competência, datas, comunicação e situação.
+- **RF09:** Registrar obrigações por cliente, tipo, departamento, competência, prazo e situação.
+- **RF10:** Registrar multa com obrigação relacionada, motivo, data e valor.
+- **RF11:** Registrar revisão por funcionário, data e resultado, tanto para execuções quanto para obrigações.
+- **RF12:** Registrar faturas por contrato e competência, respectivos vencimentos e pagamentos confirmados.
+- **RF13:** Consultar documentos, tarefas, obrigações e valores pendentes por competência, prazo, cliente e departamento.
+- **RF14:** Registrar fornecedor PF/PJ com documento fiscal, tipo e situação.
+- **RF15:** Registrar solicitação de compra com funcionário solicitante, aprovador opcional, datas, decisão e itens (descrição, quantidade e valor unitário).
+- **RF16:** Registrar contas a pagar vinculadas a fornecedor e opcionalmente à solicitação, com categoria, valor, emissão, vencimento e situação.
+- **RF17:** Registrar pagamentos de despesas com conta, funcionário, data, valor, meio e situação.
+- **RF18:** Registrar motivo, solicitante, solicitação de encerramento, data/meio de entrega documental e estado da renovação dos certificados.
+
+#### Requisitos não funcionais e limites de implementação
+- **RNF01:** Integridade referencial com PK/FK e `ON DELETE RESTRICT`, implementada nas tabelas.
+- **RNF02:** Acesso de acordo com função/setor: **requisito de aplicação**, não implementado por autenticação neste SQL.
+- **RNF03:** Rastreabilidade de autoria: o esquema registra agentes em tarefas, revisões, compras e pagamentos, mas **não registra automaticamente toda alteração de dados**.
+- **RNF04:** Preservar histórico por estados e datas de encerramento, embora o banco isolado não impeça todos os comandos de exclusão por usuários privilegiados.
+- **RNF05:** Suporte a consultas por chaves, competências e prazos; o desempenho em escala real exige medição.
+- **RNF06:** Backup e disponibilidade dependem de infraestrutura e operação, fora do escopo do script.
+- **RNF07:** Minimização e proteção de dados pessoais requerem controles administrativos e técnicos adicionais.
+- **RNF08:** Usabilidade depende de interface futura; não demonstrada pelo banco relacional.
+
+#### Regras de negócio
+- **RN01:** Cliente deve existir antes da execução de serviços; vínculos são garantidos por FKs.
+- **RN02:** Cada cliente possui código interno único (`UNIQUE`).
+- **RN03:** Cadastro de clientes é atribuição administrativa; autorização depende da aplicação.
+- **RN04:** Um cliente pode contratar vários serviços, com preço e periodicidade acordados por contrato.
+- **RN05:** Clientes devem possuir responsáveis; presença é conferida por A02, não por restrição universal na DDL.
+- **RN06:** Cada funcionário tem lotação em um departamento; responsabilidade deve ser coerente com lotação.
+- **RN07:** Toda tarefa deve ter funcionário designado; verificação A03.
+- **RN08:** Tarefa dependente só inicia após conclusão dos pré-requisitos; verificação A04.
+- **RN09:** Execução e obrigação exigem revisão aprovada antes de conclusão; verificações A05 e A06.
+- **RN10:** Serviço pode exigir documentos; vínculo e pertinência da documentação são verificados.
+- **RN11:** Documento ausente/incorreto pode gerar pendência e comunicação ao cliente.
+- **RN12:** Prazo de obrigação depende da legislação/regime e pode variar por cliente.
+- **RN13:** Descumprimento de obrigação pode gerar multa.
+- **RN14:** Fatura é emitida por contrato e sua quitação ocorre via boleto; verificação A07.
+- **RN15:** Atraso é determinado por prazo anterior à referência e ausência de conclusão.
+- **RN16:** No encerramento, registrar destino da documentação; verificação A08.
+- **RN17:** Solicitação de compra aprovada ou rejeitada registra aprovador e data da decisão; A13.
+- **RN18:** Aprovação de compras cabe ao proprietário/diretor; A16 verifica o cargo na base de teste.
+- **RN19:** Conta a pagar associada a uma solicitação deve derivar de solicitação aprovada; A14.
+- **RN20:** Contas pagas devem ser conciliadas com os pagamentos confirmados; A15.
+- **RN21:** Certificados devem permitir acompanhar aviso, solicitação e situação da renovação.
+- **RN22:** Desligamento de contrato registra solicitante, motivo, entrega e meio, quando conhecidos.
+
+**Aplicação versus banco:** as auditorias Axx identificam violações na amostra, porém não substituem regras transacionais nem autorização para impedir toda violação futura. Regras adicionais RN17–RN22 representam formalização de processos do levantamento complementar.
+
+### 1.2 Conversão do Modelo Conceitual para o Modelo Lógico
+
+A conversão para o modelo relacional originou **30 tabelas**: 25 correspondentes ao núcleo original e cinco referentes a compras/contas a pagar. Entidades conceituais como `CLIENTE`, `CONTRATO` e `OBRIGACAO` foram convertidas em tabelas; atributos simples tornaram-se colunas com tipos (`VARCHAR`, `DATE`, `INT`, `DECIMAL`), nulidade e restrições. Campos multivalorados foram separados em entidades, por exemplo os vários contatos de um cliente.
+
+Em relacionamentos **1:N**, a FK está do lado N (ex.: `contrato.id_cliente` → `cliente.id_cliente`; `item_compra.id_solicitacao` → `solicitacao_compra.id_solicitacao`). Em **N:N**, foi criada tabela associativa, incluindo `contrato_servico`, `servico_tipo_documento`, `execucao_documento`, `tarefa_funcionario` e `tarefa_dependencia`. A associação ternária de cliente, funcionário e departamento foi materializada em `responsabilidade`, com dados de vigência. Relações recursivas de dependência de tarefas são representadas por duas FKs para `tarefa`. Não há herança/generalização formal no DER; PF/PJ são diferenciadas por atributo de tipo em `cliente` e `fornecedor`.
+
+Os novos processos resultaram em `solicitacao_compra` com duas FKs para `funcionario` (quem solicita e quem aprova), `item_compra` para os itens, `conta_pagar` ligada a `fornecedor` e opcionalmente à compra, e `pagamento_despesa` para pagamentos e seu executor. Relação 1:1 não foi criada artificialmente onde o levantamento não a confirmou; campos opcionais representam participações de cardinalidade mínima zero.
+
+### 1.3 Definição de Chaves Primárias e Estrangeiras
+
+A tabela a seguir foi gerada a partir das declarações `CREATE TABLE` do script final. Identificadores substitutos inteiros facilitam referências; unicidade de negócios é protegida separadamente por `UNIQUE` quando pertinente.
+| Tabela | Chave primária | Chaves estrangeiras (coluna → tabela.coluna) |
+|---|---|---|
+| `departamento` | `id_departamento` | Nenhuma |
+| `cliente` | `id_cliente` | Nenhuma |
+| `servico` | `id_servico` | Nenhuma |
+| `tipo_documento` | `id_tipo_documento` | Nenhuma |
+| `tipo_obrigacao` | `id_tipo_obrigacao` | Nenhuma |
+| `funcionario` | `id_funcionario` | `id_departamento` → `departamento.id_departamento` |
+| `contato` | `id_contato` | `id_cliente` → `cliente.id_cliente` |
+| `certificado_digital` | `id_certificado` | `id_cliente` → `cliente.id_cliente` |
+| `contrato` | `id_contrato` | `id_cliente` → `cliente.id_cliente` |
+| `fatura` | `id_fatura` | `id_contrato` → `contrato.id_contrato` |
+| `pagamento` | `id_pagamento` | `id_fatura` → `fatura.id_fatura` |
+| `documento` | `id_documento` | `id_cliente` → `cliente.id_cliente`; `id_tipo_documento` → `tipo_documento.id_tipo_documento` |
+| `execucao_servico` | `id_execucao` | `id_contrato` → `contrato.id_contrato`; `id_servico` → `servico.id_servico` |
+| `tarefa` | `id_tarefa` | `id_execucao` → `execucao_servico.id_execucao` |
+| `revisao_execucao` | `id_revisao_exec` | `id_execucao` → `execucao_servico.id_execucao`; `id_funcionario` → `funcionario.id_funcionario` |
+| `pendencia_documental` | `id_pendencia` | `id_execucao` → `execucao_servico.id_execucao`; `id_tipo_documento` → `tipo_documento.id_tipo_documento` |
+| `obrigacao` | `id_obrigacao` | `id_cliente` → `cliente.id_cliente`; `id_tipo_obrigacao` → `tipo_obrigacao.id_tipo_obrigacao`; `id_departamento` → `departamento.id_departamento` |
+| `revisao_obrigacao` | `id_revisao_obrig` | `id_obrigacao` → `obrigacao.id_obrigacao`; `id_funcionario` → `funcionario.id_funcionario` |
+| `multa` | `id_multa` | `id_obrigacao` → `obrigacao.id_obrigacao` |
+| `contrato_servico` | `id_contrato, id_servico` | `id_contrato` → `contrato.id_contrato`; `id_servico` → `servico.id_servico` |
+| `servico_tipo_documento` | `id_servico, id_tipo_documento` | `id_servico` → `servico.id_servico`; `id_tipo_documento` → `tipo_documento.id_tipo_documento` |
+| `execucao_documento` | `id_execucao, id_documento` | `id_execucao` → `execucao_servico.id_execucao`; `id_documento` → `documento.id_documento` |
+| `tarefa_funcionario` | `id_tarefa, id_funcionario` | `id_tarefa` → `tarefa.id_tarefa`; `id_funcionario` → `funcionario.id_funcionario` |
+| `tarefa_dependencia` | `id_tarefa_dependente, id_tarefa_pre_requisito` | `id_tarefa_dependente` → `tarefa.id_tarefa`; `id_tarefa_pre_requisito` → `tarefa.id_tarefa` |
+| `responsabilidade` | `id_cliente, id_departamento, id_funcionario, data_inicio` | `id_cliente` → `cliente.id_cliente`; `id_departamento` → `departamento.id_departamento`; `id_funcionario` → `funcionario.id_funcionario` |
+| `fornecedor` | `id_fornecedor` | Nenhuma |
+| `solicitacao_compra` | `id_solicitacao` | `id_funcionario` → `funcionario.id_funcionario`; `id_aprovador` → `funcionario.id_funcionario` |
+| `item_compra` | `id_item_compra` | `id_solicitacao` → `solicitacao_compra.id_solicitacao` |
+| `conta_pagar` | `id_conta_pagar` | `id_fornecedor` → `fornecedor.id_fornecedor`; `id_solicitacao` → `solicitacao_compra.id_solicitacao` |
+| `pagamento_despesa` | `id_pagamento_despesa` | `id_conta_pagar` → `conta_pagar.id_conta_pagar`; `id_funcionario` → `funcionario.id_funcionario` |
+
+### 1.4 Normalização até a 3ª Forma Normal
+
+**1FN:** cada célula contém valor atômico. Não são guardadas listas de serviços em `contrato`, de funcionários em `tarefa` ou de itens em `solicitacao_compra`: cada relação recebe sua própria linha em tabela associativa ou dependente. Os meios de contato de cliente ficam em `contato`, e não em várias colunas repetitivas.
+
+**2FN:** atributos descritivos dependem da chave completa de sua relação. Nas associações, o valor negociado e a periodicidade do serviço são propriedades do **par contrato–serviço**, e não apenas de `servico`. No detalhamento de compras, `quantidade` e `valor_unitario` descrevem o item, que tem identificador próprio; os atributos da solicitação permanecem na tabela pai. Nas demais tabelas com PK simples, não existem dependências parciais de uma PK composta.
+
+**3FN:** características de cliente, fornecedor, departamento, funcionário, tipo documental e tipo de obrigação são armazenadas nas respectivas tabelas de referência, sem duplicá-las sistematicamente nas transações. Ex.: `conta_pagar` guarda `id_fornecedor`, não repete nome/documento fiscal; `funcionario` guarda `id_departamento` e não o nome do setor; `fatura` remete a `contrato` em vez de copiar seus dados cadastrais. Isso reduz anomalias de atualização e favorece consistência histórica.
+
+**Limite da afirmação:** esta é a justificativa da decomposição adotada com base nas dependências identificadas; uma prova formal de 3FN requer levantamento completo de dependências funcionais de cada relação. O uso de identificadores artificiais isoladamente não comprova 3FN.
+
+### 1.5 Justificativas Técnicas
+
+- **PKs:** identificadores numéricos em entidades principais e chaves compostas nas relações associativas, evitando depender de nomes, CPF/CNPJ ou datas mutáveis para identificar entidades. Os critérios de unicidade de cada tabela são explicitados no dicionário de dados e no DDL.
+- **FKs:** implementam correspondências entre clientes, contratos, serviços, funcionários, documentos, compras e pagamentos; `RESTRICT` dificulta excluir pais com dependentes.
+- **Obrigatoriedade e domínios:** `NOT NULL` para atributos essenciais e `CHECK` para situação, tipo, valores positivos, datas coerentes e validações de formato. Exemplos: `ck_cliente_tipo`, `ck_certificado_datas`, `ck_sol_compra_decisao`, `ck_item_compra_quantidade` e `ck_conta_pagar_datas`. Os `CHECK` requerem **MySQL 8.0.16+**.
+- **Unicidade:** código de cliente e identificador fiscal têm índices de unicidade; outras unicidades são especificadas explicitamente no DDL.
+- **Valores monetários:** `DECIMAL` evita aproximações de ponto flutuante para os valores financeiros; o brModelo pode exibir tipos genéricos, mas o SQL executável define os tipos implementados.
+- **Nulidade intencional:** `id_aprovador`, `data_decisao` e `id_solicitacao` em conta a pagar admitem ausência quando o evento/processo correspondente não ocorreu.
+- **Histórico:** situação e datas de encerramento mantêm trilha de negócio, embora não haja `LOG_ALTERACAO` automático para registrar mudanças feitas diretamente no banco.
+- **Segurança:** a coluna de login do funcionário não equivale a sistema de perfis, controle de permissões ou conformidade completa com a LGPD.
+- **Multas e juros:** os percentuais citados na entrevista não devem ser apresentados como calculados automaticamente pelo banco sem consulta ou rotina específica.
+
+### 1.6 Proposta de Arquitetura Analítica para BI e IA
+
+Os indicadores abaixo são **propostos pelo grupo**, baseados em dados efetivamente armazenados. Datas fixas de 2026 nos exemplos SQL permitem reprodutibilidade; em implantação real deveriam ser parametrizadas. Metas apresentadas são referenciais para discussão com a organização, **não metas confirmadas na entrevista**.
+
+| Código / indicador | Fórmula operacional | Período | Consulta | Meta sugerida |
+|---|---|---|---|---|
+| **K01 — Taxa de conferência documental** | Documentos com `status = CONFERIDO` / total de documentos recebidos × 100 | Mensal / competência | `G01` | Proposta: ≥ 95% |
+| **K02 — Tarefas atrasadas por departamento** | Contagem distinta de tarefas não concluídas, não canceladas, com prazo anterior à data de corte, agrupadas por departamento | Mensal / data de corte | `G02` | Proposta: redução mês a mês |
+| **K03 — Obrigações vencidas por competência** | Contagem de obrigações não concluídas/não canceladas cujo prazo antecede a data de corte | Mensal / competência | `G03` | Proposta: 0 vencidas |
+| **K04 — Obrigações a vencer em 15 dias** | Contagem das obrigações sem conclusão, não canceladas, com prazo entre referência e referência + 15 dias | Janela de 15 dias | `G04` | Indicador de capacidade; sem meta numérica antes de medir carteira |
+| **K05 — Pendências documentais por tipo** | Contagem das pendências abertas/comunicadas por competência e motivo/tipo | Mensal / competência | `G05` | Proposta: reduzir reincidência |
+| **K06 — Faturamento emitido** | Soma do valor total de faturas não canceladas, por competência | Mensal / competência | `G06` | Acompanhar orçamento definido pelo escritório |
+| **K07 — Recebimento e saldo aberto** | Soma de pagamentos confirmados e diferença não negativa entre faturado e recebido, por competência | Mensal / competência | `G07` | Proposta: reduzir saldo aberto |
+| **K08 — Clientes com mais pendências** | Contagem de pendências abertas/comunicadas por cliente; classificação decrescente | Mensal / corte | `G08` | Priorizar clientes recorrentes |
+| **K09 — Despesas por categoria** | Soma dos valores originais das contas não canceladas por mês de emissão e categoria | Mensal / emissão | `G09` | Acompanhar orçamento de despesas |
+| **K10 — Saldo vencido por fornecedor** | Soma, por fornecedor, da diferença entre valor original e pagamentos confirmados até corte, somente contas vencidas com saldo | Por data de corte | `G10` | Proposta: minimizar saldo vencido |
+| **K11 — Taxa de aprovação de compras** | Solicitações aprovadas / total de solicitações no mês × 100 | Mensal / solicitação | `G11` | Sem meta antes de analisar política de aprovação |
+| **K12 — Certificados a vencer sem aviso** | Contagem de certificados ativos, sem data de aviso, com vencimento em até 30 dias da referência | Janela de 30 dias | `G12` | Proposta: 0 sem comunicação |
+
+**Matriz de rastreabilidade: problemas → tabelas → consultas**
+| Problema/necessidade | Tabelas principais | Consulta(s) que o respondem | Limite da medida |
+|---|---|---|---|
+| **P01 — documentos** | `documento`, `tipo_documento`, `cliente` | `G01` | Mede recebimento/conferência, não automatiza captura |
+| **P02 — tarefas** | `tarefa`, `tarefa_funcionario`, `funcionario`, `departamento` | `G02` | Tarefa com vários responsáveis pode aparecer em mais de um departamento; `DISTINCT` impede duplicidade dentro de cada departamento |
+| **P03 — obrigações/prazos** | `obrigacao`, `cliente`, `tipo_obrigacao` | `G03`, `G04` | Janela de alerta é relatório, não notificação automática |
+| **P04 — atraso/erro documental** | `pendencia_documental`, `execucao_servico`, `contrato`, `cliente` | `G05`, `G08` | Contagem de pendências é proxy; não mede diretamente horas nem taxa de retrabalho |
+| **P05 — faturamento descentralizado** | `fatura`, `pagamento`, `contrato` | `G06`, `G07` | Medidas dependem do período e de pagamentos confirmados |
+| **Processo de compra e despesas** | `solicitacao_compra`, `item_compra`, `fornecedor`, `conta_pagar`, `pagamento_despesa` | `G09`, `G10`, `G11` | Despesas e saldos são da massa fictícia |
+| **Processo de renovação** | `certificado_digital`, `cliente` | `G12` | Certificados sem aviso, não taxa total de renovação |
+
+**Matriz KPI → tabelas → consulta gerencial:**
+
+| KPI | Tabelas utilizadas | Consulta |
+|---|---|---|
+| K01 — Taxa de conferência documental | `documento` | G01 |
+| K02 — Tarefas atrasadas por departamento | `tarefa`, `tarefa_funcionario`, `funcionario`, `departamento` | G02 |
+| K03 — Obrigações vencidas por competência | `obrigacao` | G03 |
+| K04 — Obrigações a vencer em 15 dias | `obrigacao` | G04 |
+| K05 — Pendências por tipo | `pendencia_documental` | G05 |
+| K06 — Faturamento emitido | `fatura` | G06 |
+| K07 — Recebimentos e saldo aberto | `fatura`, `pagamento` | G07 |
+| K08 — Clientes com pendências | `pendencia_documental`, `execucao_servico`, `contrato`, `cliente` | G08 |
+| K09 — Despesas por categoria | `conta_pagar` | G09 |
+| K10 — Saldo vencido por fornecedor | `conta_pagar`, `pagamento_despesa`, `fornecedor` | G10 |
+| K11 — Aprovação de compras | `solicitacao_compra` | G11 |
+| K12 — Certificados a vencer sem aviso | `certificado_digital` | G12 |
+
+**BI proposto:** dashboards mensais de documentos, atraso por setor, obrigações vencidas, recebimentos versus faturamento, contas vencidas e certificados em janela de renovação. **IA possível no futuro:** previsão de atrasos e de pendências com histórico suficiente, recomendações de priorização e detecção de anomalias em cobranças. Nenhum modelo de IA preditiva foi treinado ou implantado nesta entrega; as amostras fictícias não validam desempenho preditivo.
+
+## 2. Modelo Lógico Relacional
+
+O modelo lógico foi desenvolvido no **brModeloWeb** e convertido para o esquema SQL de 30 tabelas. O diagrama contém atributos tipados, PK, FK e vínculos entre as relações. Foi preservada a distinção entre representação visual do modelo e restrições implementadas na DDL.
+
+![Modelo lógico da DML](docs/modelo_logico.png)
+
+**Arquivo do diagrama lógico:** [`docs/modelo_logico.png`](docs/modelo_logico.png), incluído no repositório.
+
+## 3. Script SQL Completo
+
+**SGBD:** MySQL 8.0.16+ (InnoDB, `utf8mb4`). O SQL contém, em sequência, `DROP DATABASE IF EXISTS`, `CREATE DATABASE`, 30 `CREATE TABLE`, PK/FK/`CHECK`/`UNIQUE`, dados fictícios, exemplos `SELECT` com `JOIN`, operações `UPDATE` e `DELETE` demonstradas em transação com `ROLLBACK`, 12 consultas gerenciais `G01–G12`, 16 consultas de auditoria `A01–A16` e contagens de registros.
+
+**Arquivo para a branch `main`:** [`docs/script.sql`](docs/script.sql). Utilize o conteúdo exatamente igual ao arquivo testado `script_dml_entrega2_30_tabelas_RASTREABILIDADE_REVISADA.sql`, sem versões concorrentes no repositório.
+
+> **Cuidado:** o script **apaga o banco `dml_contabilidade` antes de recriá-lo**. Execute somente no ambiente de testes, após backup quando necessário. Não execute em instância com dados operacionais.
+
+### Consulta gerencial e regra de auditoria
+| Código | Pergunta respondida / verificação | Relação |
+|---|---|---|
+| `G01` | Taxa de documentos conferidos por competência | `K01` |
+| `G02` | Tarefas atrasadas por departamento | `K02` |
+| `G03` | Obrigações vencidas por competência | `K03` |
+| `G04` | Obrigações a vencer em 15 dias | `K04` |
+| `G05` | Pendências documentais por tipo e competência | `K05` |
+| `G06` | Faturamento emitido por competência | `K06` |
+| `G07` | Total recebido e saldo aberto por competência | `K07` |
+| `G08` | Clientes com mais pendências documentais | `K08` |
+| `G09` | Despesas emitidas por mês e categoria | `K09` |
+| `G10` | Saldo vencido por fornecedor | `K10` |
+| `G11` | Taxa de aprovação de solicitações mensais | `K11` |
+| `G12` | Certificados ativos com vencimento em 30 dias e sem aviso | `K12` |
+
+**Auditorias de integridade:**
+
+| Código | Inconsistência pesquisada | Regra verificada |
+|---|---|---|
+| `A01` | Códigos duplicados de clientes | `RN02` |
+| `A02` | Clientes sem responsável ativo | `RN05` |
+| `A03` | Tarefas sem responsável | `RN07` |
+| `A04` | Início com pré-requisito não concluído | `RN08` |
+| `A05` | Execução concluída sem revisão | `RN09` |
+| `A06` | Obrigação entregue sem revisão | `RN09` |
+| `A07` | Pagamento de fatura confirmado fora de boleto | `RN14` |
+| `A08` | Contrato encerrado sem destino documental | `RN16` |
+| `A09` | Responsabilidade incompatível com departamento | `RN05/RN06` |
+| `A10` | Execução de serviço não contratado | `RN04` |
+| `A11` | Documento vinculado a cliente diferente | `RN01/RN10` |
+| `A12` | Fatura paga sem pagamento suficiente | `RN14` |
+| `A13` | Compra aprovada sem aprovador/data | `RN17` |
+| `A14` | Conta vinculada a solicitação não aprovada | `RN19` |
+| `A15` | Conta paga sem conciliação ou acima do valor | `RN20` |
+| `A16` | Compra aprovada por cargo diferente de proprietário/diretor | `RN18` |
+
+## 4. Massa de Dados Fictícios e Testes
+
+As inserções foram geradas para reproduzir ordens de grandeza e diversidade operacional do escritório, **sem nomes ou valores reais de clientes**. O núcleo simula 100 clientes (aproximação do porte informado), 100 contratos, cerca de 1.000 faturas referentes a competências simuladas de janeiro a outubro de 2026, 300 execuções, 600 tarefas e 300 obrigações. A extensão representa 10 fornecedores, 24 solicitações, 36 itens, 36 contas a pagar e 27 pagamentos de despesas. Há também 93 registros de certificados, incluindo três registros novos vinculados a cenários de renovação.
+
+**Pessoas na amostra:** o gerador utiliza sete funcionários fictícios e um cadastro adicional de proprietário/diretor para registrar autorizações e pagamentos. Essa é uma opção de implementação, **não declaração de oito empregados reais**. A entrevista indicou cerca de sete funcionários; a inclusão de um papel proprietário no conjunto de testes precisa ser compreendida separadamente do quadro de empregados.
+
+**Variação de estados:** contratos ativos/encerrados, compras pendentes/aprovadas/rejeitadas, contas pagas/parciais/abertas, tarefas e obrigações concluídas ou pendentes, certificados ativos/vencidos e renovação não iniciada/em andamento/concluída. Dados regulares ou repetitivos refletem a geração sintética e **não devem ser apresentados como distribuição observada na DML**.
+
+### Evidências de teste realizadas no MySQL/phpMyAdmin
+| Verificação | Resultado informado pelo grupo | Interpretação |
+|---|---|---|
+| Criação do banco | 30 tabelas | Criação/importação executada no phpMyAdmin |
+| Consultas G01–G12 | 12 consultas executadas e G04/G10/G12 novamente verificadas | Validação com versão revisada e testes pontuais após as mudanças |
+| Auditorias A01–A16 | 0 violações em cada uma | Nenhuma inconsistência dessas regras foi detectada na massa simulada |
+| Compras | 18 aprovadas, 3 rejeitadas, 3 pendentes | Aprovação e situações cobertas |
+| Contas a pagar | 36 contas; R$ 3.001,50 de saldo pendente | Reconciliação na amostra |
+| Certificados por renovação | 6 CONCLUIDA, 7 EM_ANDAMENTO, 80 NAO_INICIADA | 93 registros; não equivalem a 93 processos de renovação |
+| G10 revisada | R$ 3.001,50 por fornecedores | Soma conciliada com a massa de teste |
+| G12 revisada | 3 certificados sem aviso | Janela fixa de outubro/2026 |
+| A16 | 0 compras aprovadas por cargo inválido | Verificação por cargo e não por identificador fixo |
+
+**Validação da G04:** após a revisão das consultas, o grupo informou o resultado **100** para a execução da G04 literal no phpMyAdmin, considerando a janela de referência de **15/10/2026 a 30/10/2026**. Esse valor é sintético e depende dos filtros de situação e conclusão da consulta gravada em [`docs/script.sql`](docs/script.sql). A contagem de 100 já havia aparecido em um teste manual com outro filtro; por isso o resultado literal foi solicitado separadamente e informado pelo grupo.
+
+Os resultados acima são evidências de execução relatadas nos testes do grupo, **não avaliação em ambiente produtivo**. Zero linhas nas consultas de auditoria significa apenas que a amostra não contém as anomalias que essas consultas procuram.
+
+## 5. Repositório GitHub e Artefatos
+
+Organização dos artefatos do projeto:
+
+```text
+README.md
+docs/
+  script.sql
+  DER_DML_CONTABILIDADE1.png
+  modelo_logico.png
+  dicionario_dados.html
+  evidencias/
+    entrevista_videochamada_15-09-2026.png
+levantamento/
+  levantamento.md
+```
+
+**DER conceitual revisado:**
+
+![DER conceitual da DML](docs/DER_DML_CONTABILIDADE1.png)
+
+[Visualizar DER conceitual](docs/DER_DML_CONTABILIDADE1.png) · [Visualizar modelo lógico](docs/modelo_logico.png)
+
+**Dicionário de dados:** [Abrir dicionário HTML](docs/dicionario_dados.html). O documento apresenta o esquema de 30 tabelas, seus atributos, tipos de dados e restrições.
+
+**Levantamento:** [Documento das três etapas do levantamento](levantamento/levantamento.md), com metodologia, resultados e distinção entre respostas e observações. O arquivo original de perguntas complementares de 26/10, quando incorporado ao repositório, permanece como fonte primária adicional na pasta `docs`. A captura da [entrevista por videochamada](docs/evidencias/entrevista_videochamada_15-09-2026.png) é a evidência visual disponível.
+
+**Repositório do grupo:** [GLope-ui/sistema-gestao-dml-contabilidade](https://github.com/GLope-ui/sistema-gestao-dml-contabilidade), branch `main`.
+
+## 6. Transparência sobre o Uso de Inteligência Artificial
+
+O grupo utilizou **Claude** na Entrega 1 e **ChatGPT (OpenAI)** no desenvolvimento da Entrega 2. Foram usados para análise e revisão dos diagramas, confrontação de requisitos, conversão do modelo para SQL, construção da massa fictícia, elaboração e revisão das consultas, interpretação de resultados e estruturação dos documentos. **As respostas atribuídas à empresa vieram das entrevistas com Deni Maricato Maciel**, não das ferramentas. A correção dos resultados e a decisão sobre a entrega permanecem sob responsabilidade do grupo.
+
+### 6.1 Claude — apoio ao modelo conceitual e à Entrega 1
+
+| Item | Registro |
+|---|---|
+| **Ferramenta e etapa** | Claude, durante a modelagem conceitual, revisão do DER, dicionário de dados e README da Entrega 1. |
+| **Motivação** | Uniformizar a notação brasileira e comparar o modelo com o levantamento de campo para identificar lacunas. |
+| **Prompts utilizados** | Entre os prompts registrados na Entrega 1: “Com base neste diagrama entidade relacionamento feito no draw.io, você consegue criar uma imagem deste modelo de DER usando o modelo de Peter Chen”; “certo, gere um usando a notação brasileira”; “com base neste documento que contém a base para o dicionário de dados e no arquivo de imagem que eu lhe enviei, busque por inconsistências e liste as soluções para mim”. |
+| **Resposta recebida** | Sugestões de padronização do DER, revisão de entidades e relações, apontamento de campos e vínculos ausentes e auxílio na documentação. |
+| **Fontes consultadas e verificadas** | Roteiro e respostas das entrevistas da DML, versão do DER e dicionário da Entrega 1. |
+| **Trechos rejeitados ou corrigidos** | Rejeição de estruturas e relações consideradas redundantes ou desproporcionais, como entidades genéricas de perfil e log, conforme descrito na Entrega 1; preservação das relações realmente necessárias ao escritório. |
+| **Justificativa da escolha final** | A versão final privilegiou processos confirmados pela organização em vez de um sistema genérico com módulos não solicitados. |
+| **Reflexão crítica** | A IA sugeriu extensões plausíveis, mas nem todas correspondiam ao porte e às necessidades comprovadas; diagramas exigiram leitura e revisão humana. |
+
+### 6.2 ChatGPT — conversão lógica, DDL, DML e massa de dados
+
+| Item | Registro |
+|---|---|
+| **Ferramenta e etapa** | ChatGPT, na Entrega 2: interpretação dos modelos, construção e revisão do SQL MySQL para 30 tabelas, dados fictícios e exemplos de `SELECT`, `UPDATE`, `DELETE`. |
+| **Motivação** | Converter as entidades/relacionamentos em tabelas executáveis, acrescentar os cinco módulos de compras/contas a pagar indicados pelas entrevistas e produzir dados de teste coerentes. |
+| **Prompts utilizados** | Pedidos feitos ao ChatGPT para gerar e revisar o SQL com 30 tabelas, verificar o atendimento ao esqueleto do professor e incluir os novos relacionamentos de fornecedores, solicitações, itens, contas e pagamentos. A partir das revisões, também foi solicitado: “entao antes do readme final, vamos testar, fazer o teste final desse sql, o que acha”. |
+| **Resposta recebida** | Arquivo SQL com DDL, integridade referencial, inserções fictícias, operações transacionais e consultas para gestão e auditoria; proposta de testes no phpMyAdmin. |
+| **Fontes consultadas e verificadas** | DER Conceitual, Modelo Lógico, README e entrevistas, regras do esqueleto da disciplina e resultados das importações/consultas executadas no phpMyAdmin pelo grupo. |
+| **Trechos rejeitados ou corrigidos** | Ajustes na representação de certificados renovados, na massa sintética e nas consultas G10, G12 e A16; adaptação posterior da G04 e das consultas agregadas aos KPIs. |
+| **Justificativa da escolha final** | Manter as 30 tabelas compatíveis com o modelo, preservar os dados fictícios e adotar apenas consultas executadas/avaliadas pelo grupo. |
+| **Reflexão crítica** | Uma consulta que executa sem erro não comprova atendimento ao indicador. A massa gerada apresentou inicialmente certificados sem renovações concluídas, e alguns KPIs exigiram agregações adicionais. |
+
+### 6.3 ChatGPT — rastreabilidade, testes e documentação final
+
+| Item | Registro |
+|---|---|
+| **Ferramenta e etapa** | ChatGPT, na conferência de G01–G12 e A01–A16, interpretação dos resultados do phpMyAdmin, construção do dicionário HTML de 30 tabelas, do levantamento em Markdown, do README final e de pacotes para publicação. |
+| **Motivação** | Verificar a consistência entre problema, requisito, tabela, KPI e consulta e estruturar os artefatos exatamente na organização solicitada pelo professor. |
+| **Prompts utilizados** | Exemplos literais registrados na conversa: “COmo fazemos isso”; “Seguinte, agora que todos os testes foram finalizados, o SQL esta pronto, o Modelo Lógico, O DER Conceitual esta corrigido tambem, falta o que agora, apenas criar o README da entrega 2?”; “chat, por que voce colocou comentarios SEU, no README, eu pensei que eu so podia colocar ele e tudo bem”; “DE NOVO, se tiver alguma informação que o esqueleto do professor pede e voce nao tem, me fale”. |
+| **Resposta recebida** | Tabelas de rastreabilidade, validação de resultados das consultas e versões de README, dicionário HTML e organização do repositório. |
+| **Fontes consultadas e verificadas** | Esqueleto da Entrega 2; feedback da avaliação da Entrega 1; README da Entrega 1; SQL final; resultados da execução pelo grupo; datas, participantes, formatos das entrevistas e site institucional da DML. |
+| **Trechos rejeitados ou corrigidos** | Removidos comentários editoriais e instruções internas que não deveriam constar em relatório acadêmico; restituída a coluna obrigatória de usuários GitHub; corrigidas descrições de evidências e histórico das entrevistas; distinguido o teste manual de G04 da consulta literal. |
+| **Justificativa da escolha final** | A documentação final foi organizada como texto acadêmico do grupo, com informações identificáveis e rastreáveis e links relativos para os artefatos. |
+| **Reflexão crítica** | A IA chegou a classificar versões intermediárias como “prontas” mesmo contendo campos omissos e notas de revisão. Também confundiu, em uma etapa, duas consultas semelhantes da G04. A revisão humana e a comparação com o esqueleto foram indispensáveis. |
+
+**Pesquisa externa e IA preditiva:** o site institucional foi consultado para comprovar endereço e contato; não houve treinamento ou implantação de modelo preditivo. As aplicações de IA da seção 1.6 constituem propostas, não funções entregues. Os resultados numéricos citados são da massa fictícia e dos testes realizados pelo grupo.
+
+## 7. Apresentação e Demonstração Final
+
+**Roteiro de demonstração de aproximadamente 8 minutos:** (1) apresentação da organização e problemas P01–P05; (2) visão geral DER e conversão em 30 tabelas; (3) por que separar documentos, tarefas, cobranças e compras; (4) importação do SQL em banco de testes; (5) demonstração de G02/G03, G07, G10 e G12; (6) evidência de auditorias A01–A16 e limites do sistema; (7) breve explicação do uso de IA e das validações. A distribuição das falas é definida pelo grupo.
 
----
-
-## Metadados
-
-- **Nomes dos alunos e RGM**
-  - Vinícius Dias Gomes — RGM: 47441081
-  - Guilherme de Souza Lopes dos Santos — RGM: 47475609
-  - Valquíria Rodrigues de Macedo — RGM: 47415061
-  - Gabrielly Witai Pereira — RGM: 47396750
-  - Pablo Henrique Lourenço Guimarães — RGM: 47672285
-
-## 1. Caracterização da Organização
-
-- **Nome e natureza da organização:** DML CONTABILIDADE LTDA., empresa privada com fins lucrativos do setor de serviços contábeis. Atua na escrituração contábil e fiscal, na assessoria empresarial e no planejamento tributário de pessoas físicas e jurídicas.
-
-- **Contexto e porte:** organização com aproximadamente 50 anos de atuação, uma única unidade, 7 funcionários e cerca de 100 clientes ativos, entre pessoas físicas e empresas. A estrutura é dividida entre a diretoria e cargos técnicos (contadores e auxiliares), organizados por departamentos, além de um departamento administrativo e de relacionamento com clientes. O volume de atividades é predominantemente cíclico: serviços mensais, como folha de pagamento e apuração de impostos, e serviços anuais, como a entrega de declarações de imposto de renda de pessoa física. Os documentos chegam por captura automática no ERP contábil (Alterdata) mediante certificado digital A1, por e-mail, por WhatsApp corporativo ou fisicamente, na recepção ou por motoboy.
-
-- **Problemas e necessidades identificados:** a organização não relatou dificuldade em localizar informações, por concentrá-las no ERP contábil e no servidor de arquivos. Os pontos frágeis estão no que não é registrado. Não há registro formal do recebimento de cada documento, nem rotina única de acompanhamento de tarefas: cada setor mantém controle próprio do que está pendente, em andamento ou concluído, e é também nesse controle setorial que se identifica um atraso. Os prazos das obrigações não são registrados em sistema, apenas conhecidos pelos setores, e não existe alerta de prazo próximo, embora o descumprimento gere multa para o cliente. O maior gerador de retrabalho apontado é a coleta de dados para o fechamento da folha de pagamento: as empresas demoram a enviar as informações e frequentemente as enviam com erro, obrigando o setor a refazer o trabalho. Parte dos controles vive fora do sistema, em planilhas Excel de conferência e de faturamento e em documentos Word de contratos.
-
-- **Justificativa da escolha:** a organização foi escolhida por reunir três condições necessárias ao projeto. Primeiro, o acesso: o grupo obteve autorização para realizar a pesquisa de campo e entrevistar o responsável pela empresa. Segundo, o porte adequado, com processos suficientes para gerar um modelo rico — clientes, contratos, serviços, documentos, tarefas, obrigações e cobrança — sem a complexidade de uma organização de grande porte. Terceiro, a existência de lacunas reais de registro, que dão sentido prático à modelagem: o sistema proposto não duplicaria um controle já existente, mas passaria a registrar aquilo que hoje depende da memória e do controle informal de cada setor.
-
-- **Evidências da organização:**
-  - Razão social: DML CONTABILIDADE LTDA.
-  - Responsável pela organização e contato fornecido ao grupo: **Deni Maricato Maciel — TEL (11) 98857-6266**
-  - Levantamento realizado por meio de entrevista estruturada com o responsável, aplicada presencialmente, com registro das respostas no roteiro de perguntas anexado ao repositório.
-
----
-
-## 2. Processos de Negócio
-
-- **Principais processos mapeados:**
-
-  **Cadastro de cliente.** A secretária do departamento administrativo e de relacionamento com clientes registra o novo cliente no sistema interno, com os dados cadastrais e fiscais da pessoa física ou da empresa. Cada cliente recebe um código de identificação interno, que é o elemento usado para vincular documentos ao cliente. Alterações societárias ou cadastrais disparam atualização do registro.
-
-  **Contratação de serviços.** O cliente firma contrato com o escritório e, dentro dele, contrata um ou mais serviços. Valor e periodicidade são acordados por contrato, podendo variar entre clientes para o mesmo serviço. O contrato também fixa os prazos de entrega de documentos e de execução.
-
-  **Recebimento e conferência de documentos.** Os documentos são capturados automaticamente no ERP por certificado digital, recebidos por e-mail ou WhatsApp, ou entregues fisicamente. São identificados pelo código do cliente e conferidos pelo departamento que executará o serviço relacionado. Quando falta documento ou o documento chega incorreto, o setor faz a cobrança ou avisa o cliente do erro.
-
-  **Execução de serviço e distribuição de tarefas.** A cada competência, o serviço contratado gera uma execução. A execução é desdobrada em tarefas que percorrem os departamentos: recepção, conferência, ações específicas de cada setor, conferência final e retorno ao cliente com o serviço realizado. Uma tarefa pode depender da conclusão de outra, e uma mesma tarefa pode ter mais de um responsável.
-
-  **Revisão.** Nenhum serviço é entregue sem conferência: todos os serviços são revisados dentro de seus departamentos, e o mesmo ocorre antes de uma obrigação ser considerada cumprida.
-
-  **Controle de obrigações e prazos.** Cada obrigação é acompanhada pelo setor responsável, que detém o controle de prazo e entrega. Os prazos variam conforme a opção tributária de cada cliente e são definidos pelo contrato ou pela legislação. O descumprimento gera multa para a empresa.
-
-  **Faturamento e cobrança.** A cobrança é eletrônica, por boleto bancário, com valores que variam conforme o cliente e os serviços contratados. Os pagamentos são registrados e há controle de pagamentos em atraso.
-
-- **Fluxogramas:** não foram elaborados nesta entrega; os processos estão descritos textualmente acima e representados de forma estrutural no DER da Seção 7.
-
----
-
-## 3. Requisitos do Sistema
-
-### 3.1 Requisitos Funcionais
-
-- **RF01 — Cadastrar clientes.** O sistema deve permitir registrar pessoas físicas e jurídicas, com código interno único, documento fiscal e, para empresas, o regime tributário.
-- **RF02 — Registrar canais de contato.** O sistema deve permitir cadastrar os canais de comunicação de cada cliente (e-mail, telefone, WhatsApp) e indicar o canal preferencial.
-- **RF03 — Controlar certificados digitais.** O sistema deve registrar os certificados digitais dos clientes e suas datas de validade.
-- **RF04 — Registrar contratos e serviços contratados.** O sistema deve permitir registrar o contrato de cada cliente e os serviços nele incluídos, com valor acordado, periodicidade e dia limite de envio de documentos.
-- **RF05 — Gerar e acompanhar execuções de serviço.** O sistema deve registrar a execução de cada serviço contratado por competência, com prazo, data de conclusão e situação.
-- **RF06 — Registrar tarefas e responsáveis.** O sistema deve permitir desdobrar a execução em tarefas, atribuí-las a um ou mais funcionários e registrar dependência entre tarefas.
-- **RF07 — Registrar o recebimento de documentos.** O sistema deve registrar cada documento recebido, seu tipo, sua competência, o meio de recebimento e a data de conferência.
-- **RF08 — Registrar pendências documentais.** O sistema deve permitir registrar documento faltante ou incorreto, a data de identificação, a data e o canal da comunicação ao cliente e a situação da pendência.
-- **RF09 — Controlar obrigações e prazos.** O sistema deve registrar as obrigações de cada cliente, com tipo, competência, prazo, setor responsável e situação.
-- **RF10 — Registrar multas.** O sistema deve registrar as multas decorrentes do descumprimento de prazos, com valor, data e motivo.
-- **RF11 — Registrar revisões.** O sistema deve registrar a revisão de execuções e de obrigações, com revisor, data e resultado.
-- **RF12 — Emitir e controlar faturas.** O sistema deve permitir gerar a fatura do contrato por competência, com valor e vencimento, e registrar o pagamento correspondente.
-- **RF13 — Consultar informações.** O sistema deve permitir consultar clientes, documentos, tarefas, obrigações e cobranças, e identificar itens vencidos sem conclusão.
-
-### 3.2 Requisitos Não Funcionais
-
-- **RNF01 — Integridade referencial.** O sistema deve impedir registros órfãos: toda execução deve pertencer a um contrato e a um serviço, toda tarefa a uma execução, toda fatura a um contrato.
-- **RNF02 — Controle de acesso por papel.** O acesso deve respeitar a lotação do funcionário: o cadastro de clientes é atribuição do departamento administrativo e as informações financeiras não devem ser alteradas após o lançamento.
-- **RNF03 — Rastreabilidade.** O sistema deve permitir identificar qual funcionário realizou cada alteração relevante, necessidade explicitada pela organização.
-- **RNF04 — Preservação do histórico.** Clientes, contratos e funcionários encerrados devem ser inativados, nunca excluídos, preservando o histórico contábil e fiscal.
-- **RNF05 — Desempenho de consulta.** As consultas por cliente, competência e prazo devem ser respondidas em tempo compatível com o uso diário, apoiadas por índices adequados.
-- **RNF06 — Disponibilidade e backup.** As informações devem estar sujeitas a rotina de backup, prática já adotada pela organização.
-- **RNF07 — Conformidade com a LGPD.** O tratamento dos dados pessoais deve limitar-se às finalidades contratual e legal, com acesso restrito e registro de acesso.
-- **RNF08 — Usabilidade.** A interface deve ser operável por usuários sem formação em tecnologia, refletindo o perfil da equipe da organização.
-
----
-
-## 4. Regras de Negócio
-
-- **Regras operacionais:**
-
-  - **RN01.** Todo cliente deve possuir cadastro no sistema interno antes de qualquer serviço ser executado.
-  - **RN02.** Cada cliente possui um código de identificação interno único, usado para vincular documentos ao cliente.
-  - **RN03.** O cadastro e a alteração de clientes são atribuição da secretária do departamento administrativo e de relacionamento com clientes.
-  - **RN04.** Um cliente pode contratar mais de um serviço, e o valor de um mesmo serviço pode variar de cliente para cliente.
-  - **RN05.** Cada cliente tem, ao menos, um responsável dentro do escritório, e cada departamento tem um responsável por sua área; um funcionário pode responder por vários clientes.
-  - **RN06.** Todo funcionário está lotado em um único departamento.
-  - **RN07.** Toda tarefa possui ao menos um responsável, e um mesmo serviço pode envolver mais de um funcionário.
-  - **RN08.** Uma tarefa só pode ser iniciada após a conclusão das tarefas das quais depende.
-  - **RN09.** Nenhum serviço é considerado concluído antes de ser revisado dentro do departamento; a mesma regra vale para as obrigações.
-  - **RN10.** Determinados serviços exigem tipos específicos de documento, e a ausência de documento obrigatório impede a execução.
-  - **RN11.** Documento faltante ou incorreto gera pendência documental, comunicada ao cliente.
-  - **RN12.** Os prazos são definidos pelo contrato ou pela legislação e podem variar conforme a opção tributária do cliente.
-  - **RN13.** O descumprimento de prazo de obrigação pode gerar multa para o cliente.
-  - **RN14.** A cobrança é feita por fatura emitida a partir do contrato e quitada exclusivamente por boleto bancário.
-  - **RN15.** Uma tarefa, execução ou obrigação é considerada atrasada quando o prazo está vencido e a conclusão não foi registrada.
-  - **RN16.** Encerrado o contrato, a documentação é entregue ao novo responsável técnico ou ao proprietário da empresa, e o registro do destino é mantido.
-
-- **Restrições organizacionais:**
-
-  - **RO01 — Guarda legal de documentos.** A atividade contábil está sujeita a prazos legais de guarda de documentos fiscais e trabalhistas. Isso importa ao modelo porque nenhuma entidade admite exclusão física: encerramentos são representados por data de encerramento e indicador de inatividade.
-  - **RO02 — Informações financeiras não editáveis.** A organização informou que ninguém altera informações financeiras. Isso importa porque o modelo separa FATURA de PAGAMENTO: uma correção é um novo registro, não a edição do anterior.
-  - **RO03 — Restrição de cadastro.** Apenas o departamento administrativo cadastra ou altera clientes, o que exige que o modelo saiba a que departamento cada funcionário pertence.
-  - **RO04 — Rastreabilidade de alterações.** A organização considera importante saber qual funcionário realizou determinada alteração, o que exige identificação individual de acesso.
-  - **RO05 — Dependência de documentos de terceiros.** A execução depende de documentos enviados pelo cliente, fora do controle do escritório. Isso importa porque a pendência documental precisa ser uma entidade própria, e não um simples estado da execução.
-  - **RO06 — Uma única unidade.** A organização possui uma só unidade, o que dispensa entidade de filial no modelo.
-
----
-
-## 5. Dicionário de Dados Conceitual (Preliminar)
-
-O dicionário de dados conceitual foi elaborado em formato HTML, contendo as entidades, atributos, descrições e regras de negócio associadas ao modelo.
-
-**[Acessar o Dicionário de Dados em HTML](docs/dicionario_dados.html)**
-
-
-
----
-
-## 6. Modelagem Conceitual (Entidades, Atributos, Relacionamentos)
-
-- **Entidades reconhecidas:**
-
-  - **CLIENTE** — pessoa física ou jurídica atendida; é o eixo do modelo, pois documentos, contratos e obrigações partem dele.
-  - **CONTATO** — canais de comunicação do cliente; separado porque um cliente tem vários canais e a comunicação de pendências depende deles.
-  - **CERTIFICADO_DIGITAL** — certificado que viabiliza a captura automática de documentos; tem validade própria, que precisa ser acompanhada.
-  - **CONTRATO** — instrumento que vincula cliente e escritório, com vigência e encerramento.
-  - **SERVICO** — catálogo de serviços oferecidos, com periodicidade padrão.
-  - **EXECUCAO_SERVICO** — ocorrência de um serviço em uma competência; é o que permite falar em prazo e conclusão.
-  - **TAREFA** — etapa departamental da execução, com responsáveis e dependência entre etapas.
-  - **REVISAO_EXECUCAO** — conferência obrigatória antes da entrega do serviço.
-  - **DEPARTAMENTO** — setor que concentra rotinas e prazos; é a unidade organizacional efetiva.
-  - **FUNCIONARIO** — pessoa que executa tarefas, revisa e responde por clientes; concentra também a identificação de acesso.
-  - **TIPO_DOCUMENTO** — classificação dos documentos recebidos.
-  - **DOCUMENTO** — peça enviada pelo cliente e consumida na execução.
-  - **PENDENCIA_DOCUMENTAL** — registro de falta ou erro de documento, com a cobrança feita ao cliente.
-  - **TIPO_OBRIGACAO** — catálogo de obrigações, com base legal e periodicidade.
-  - **OBRIGACAO** — dever concreto de um cliente em uma competência, com prazo e setor responsável.
-  - **MULTA** — penalidade decorrente do descumprimento de prazo.
-  - **REVISAO_OBRIGACAO** — conferência antes de considerar a obrigação cumprida.
-  - **FATURA** — cobrança periódica emitida a partir do contrato.
-  - **PAGAMENTO** — quitação da fatura por boleto bancário.
-
-- **Atributos e classificações:** cada entidade reúne atributos de identificação (identificadores e códigos), de caracterização (nomes, tipos e descrições), de temporalidade (datas de início, prazo, conclusão, validade e vencimento) e de situação (indicadores de estado). Os atributos de cada entidade estão detalhados na Seção 5. Três relacionamentos possuem atributos próprios: **INCLUI** (valor e periodicidade acordados, dia limite de envio), **ASSUME** (papel e data de atribuição) e **RESPONSABILIDADE** (tipo de responsabilidade e período).
-
-- **Relacionamentos pertinentes:** o cliente possui contatos, certificados, contratos, documentos e obrigações. O contrato inclui serviços — relacionamento N:M com atributos — e gera faturas, quitadas por pagamentos. A execução de serviço vincula-se ao contrato e ao serviço, gera tarefas, consome documentos (N:M) e origina pendências documentais. A tarefa é assumida por funcionários (N:M) e depende recursivamente de outras tarefas. O departamento lota funcionários e responde por obrigações. A responsabilidade sobre o cliente é um relacionamento ternário entre cliente, funcionário e departamento. Execuções e obrigações recebem revisões realizadas por funcionários.
-
-- **Restrições e políticas organizacionais aplicadas ao modelo:** a inexistência de exclusão física (encerramentos são registrados por data e indicador de situação); a impossibilidade de alterar lançamentos financeiros, que leva a tratar correções como novos registros; a restrição de cadastro ao departamento administrativo, que exige a lotação do funcionário no modelo; a rastreabilidade de alterações, atendida pela identificação de acesso do funcionário; e a existência de uma única unidade, que dispensa entidade de filial.
-
----
-
-## 7. Diagrama Entidade-Relacionamento (DER)
-
-![Diagrama Entidade-Relacionamento](docs/DER_DML_CONTABILIDADE1.png)
-
-O diagrama utiliza a notação brasileira (Heuser): retângulos representam entidades, losangos representam relacionamentos, elipses representam atributos com o identificador sublinhado, e a cardinalidade é expressa em pares **(mín,máx)** posicionados junto à entidade a que se referem. Linhas tracejadas indicam relacionamentos roteados para reduzir cruzamentos, com a mesma semântica das linhas contínuas.
-
-O modelo representa 19 entidades, seus atributos, os relacionamentos entre elas e as cardinalidades mínimas e máximas de cada participação, incluindo um relacionamento ternário (RESPONSABILIDADE), um relacionamento recursivo (DEPENDE_DE, entre tarefas) e três relacionamentos N:M com atributos próprios (INCLUI, EXIGE e ASSUME).
-
-A escalabilidade está prevista na separação entre catálogo e ocorrência — SERVICO e EXECUCAO_SERVICO, TIPO_OBRIGACAO e OBRIGACAO, TIPO_DOCUMENTO e DOCUMENTO — que permite acrescentar novos serviços, obrigações e tipos de documento sem alterar a estrutura. A integração com as próximas etapas está preparada pela normalização das datas de prazo e conclusão, que sustentam os controles de atraso e os futuros alertas de vencimento.
-
----
-
-## 8. Justificativa Técnica
-
-**Por que separar SERVICO de EXECUCAO_SERVICO.** O serviço é o que o escritório oferece; a execução é o que ele faz em uma competência. Guardar prazo e conclusão no próprio serviço impediria registrar a folha de janeiro e a de fevereiro como fatos distintos. A separação é o que dá sentido ao controle de prazos, hoje mantido informalmente por cada setor. A mesma razão levou a separar TIPO_OBRIGACAO de OBRIGACAO e TIPO_DOCUMENTO de DOCUMENTO.
-
-**Por que INCLUI é um relacionamento com atributos e não uma entidade.** O valor e a periodicidade não pertencem ao contrato nem ao serviço isoladamente: existem apenas na combinação dos dois, porque um mesmo serviço custa valores diferentes para clientes diferentes. Um relacionamento N:M com atributos expressa exatamente isso. Uma entidade associativa foi considerada e descartada por não acrescentar identidade própria ao fato — a execução, que precisava dela, passou a referenciar diretamente CONTRATO e SERVICO.
-
-**Por que PENDENCIA_DOCUMENTAL é entidade e não um estado do documento.** A pendência mais frequente relatada é a do documento que não chegou. Um documento inexistente não pode carregar um estado; a falta precisa existir como registro próprio, com data de identificação, canal de comunicação e situação. É esse registro que dá tratamento ao maior gerador de retrabalho apontado pela organização.
-
-**Por que a pendência se liga à execução, e não ao cliente.** O cliente é alcançável por execução → contrato → cliente. Um vínculo direto criaria dois caminhos para o mesmo fato e abriria espaço para inconsistência, sem ganho de informação.
-
-**Por que a cardinalidade mínima importa.** O par (mín,máx) distingue o que é obrigatório do que é opcional, algo que a notação de Chen não mostra. Registrar que CLIENTE participa de RESPONSABILIDADE com (1,n) é declarar a regra de que nenhum cliente fica sem responsável; registrar DT_CONCLUSAO como opcional é declarar que a execução existe antes de terminar.
-
-**Por que o atraso não é atributo.** Armazenar "atrasado" como estado exigiria atualizar todos os registros diariamente e conviveria com dados desatualizados. Atraso é condição derivada de prazo vencido sem conclusão registrada, o que mantém o modelo consistente por construção.
-
-**Por que a revisão foi dividida em duas entidades.** REVISAO_EXECUCAO e REVISAO_OBRIGACAO revisam objetos diferentes. Uma entidade única exigiria um vínculo polimórfico, que o SGBD não consegue validar por integridade referencial. Duas entidades custam um retângulo a mais e garantem a consistência.
-
-**Por que o acesso ficou em FUNCIONARIO.** Uma entidade separada de usuário só se justifica quando há acessos que não correspondem a pessoas da organização, o que não é o caso: são 7 funcionários, todos lotados em departamentos. O login como atributo do funcionário resolve a identificação sem criar uma entidade de relacionamento 1:1.
-
-**Por que a fatura pertence ao contrato.** O valor cobrado nasce dos serviços incluídos no contrato. Ligar a fatura ao contrato preserva esse caminho e evita um vínculo redundante com o cliente. A limitação assumida é que a fatura registra o valor total e não a composição por serviço; se a organização passar a discriminar os serviços no boleto, será necessário reintroduzir uma entidade de item de fatura.
-
-**Por que DEPENDE_DE é recursivo.** A organização descreveu que um departamento assume o serviço depois que outro conclui sua etapa. Como as duas pontas da relação são tarefas, o relacionamento é da entidade com ela mesma, com papéis distintos: tarefa dependente e pré-requisito.
-
----
-
-## 9. Uso de Inteligência Artificial
-*
-
-| Item | O que registrar |
-|------|------------------|
-| **Ferramenta e etapa** | Claude (Anthropic). Usada em três etapas: (a) redesenho do DER a partir do diagrama elaborado pelo grupo no draw.io, primeiro na notação de Peter Chen e depois na notação brasileira; (b) análise crítica do modelo contra as respostas da entrevista, para identificar inconsistências e lacunas; (c) estruturação deste README e do dicionário de dados em HTML. |
-| **Motivação** | (a) Padronizar graficamente o diagrama e garantir que as cardinalidades estivessem expressas corretamente na notação exigida; (b) confrontar o modelo com o levantamento de campo, verificando se cada resposta da entrevista tinha lugar no modelo; (c) organizar a documentação conforme o esqueleto e o exemplo de dicionário fornecidos pela disciplina. |
-| **Prompt(s) utilizados** | "Com base neste diagrama entidade relacionamento feito no draw.io, você consegue criar uma imagem deste modelo de DER usando o modelo de Peter Chen"; "certo, gere um usando a notação brasileira"; "com base neste documento que contém a base para o dicionário de dados e no arquivo de imagem que eu lhe enviei, busque por inconsistências e liste as soluções para mim"; "certo, revise os seguintes termos: Contrato de Serviço não precisa existir, Pendência Documental não precisa se relacionar duplamente ao cliente, fatura pode estar diretamente ligado ao contrato, a relação Responde_por entre o departamento e a tarefa não precisa existir, os atributos de Usuário devem estar diretamente relacionados ao funcionário, a entidade Perfil não precisa existir, nem o Log"; "use o esqueleto como base e gere o README e um arquivo HTML com o dicionário de dados seguindo o exemplo fornecido". |
-| **Resposta recebida** | A ferramenta produziu as imagens do DER nas duas notações; apontou inconsistências entre o modelo e as respostas da entrevista (pendência documental sem vínculo com o cliente, fatura sem discriminação por serviço, ausência de registro de certificado digital, de canais de contato, de multa e de rastreabilidade de alterações); sugeriu entidades adicionais; e redigiu as seções deste README e a estrutura do dicionário de dados. |
-| **Fontes consultadas e verificadas** | A ferramenta não foi usada como fonte de informação sobre a organização. Todos os dados sobre a DML CONTABILIDADE LTDA. vieram da entrevista aplicada pelo grupo. Cada afirmação incorporada ao texto foi conferida contra o roteiro de perguntas respondido pela empresa; afirmações que não encontravam respaldo nas respostas foram removidas. |
-| **Trechos rejeitados ou corrigidos** | O grupo rejeitou boa parte das entidades propostas na versão intermediária do modelo. Foram descartadas as entidades USUARIO, PERFIL, LOG_ALTERACAO, CONTRATO_SERVICO e ITEM_FATURA, além do relacionamento entre DEPARTAMENTO e TAREFA e do vínculo direto entre PENDENCIA_DOCUMENTAL e CLIENTE. O motivo foi a complexidade desproporcional ao porte da organização e a duplicidade de caminhos entre as mesmas entidades. Os atributos de acesso foram transferidos para FUNCIONARIO. |
-| **Justificativa da escolha final** | O modelo mantido é o que representa os processos efetivamente observados com o menor número de entidades. As sugestões aceitas foram as que corrigiam lacunas concretas do levantamento — certificado digital, canais de contato, multa, prazo de envio de documentos e registro de conferência. As rejeitadas foram as que anteciparam necessidades ainda não manifestadas pela organização. |
-| **Reflexão crítica** | A principal limitação observada foi a tendência da ferramenta a ampliar o modelo, propondo entidades de controle de acesso e auditoria que atendiam a boas práticas genéricas, mas não a uma necessidade declarada por uma empresa de 7 pessoas. Houve também interpretações inferidas a partir do diagrama original, em pontos em que as linhas do desenho eram ambíguas, o que exigiu verificação manual pelo grupo. O uso mais proveitoso foi o de confronto entre o modelo e o roteiro de entrevista, que revelou respostas do levantamento sem representação no DER. |
-
----
-
-## Resumo dos Pesos
-
-| Dimensão | Peso total |
-|----------|-----------|
-| Conceitual (contexto, requisitos/regras, modelagem, justificativa técnica) | 30% |
-| Procedimental (requisitos, fluxogramas, dicionário de dados, DER) | 50% |
-| Atitudinal (participação, comprometimento, colaboração, autonomia) | 20% |
-
-**Entrega final:** README.md completo + DER + Dicionário de Dados em HTML (com exceção dos cursos GTI) anexado no repositório GitHub do grupo.
