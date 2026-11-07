@@ -68,6 +68,9 @@ O levantamento foi realizado em **três etapas**: **03/09/2026 (presencial)**, *
 
 A correção da Entrega 1 reconheceu a adequação do DER original, do dicionário e dos requisitos principais. A revisão preservou essa base e estendeu os processos cuja cobertura havia sido considerada parcial ou ausente.
 #### Processos de negócio
+
+Os processos de negócio apresentados nesta seção representam as principais atividades operacionais e administrativas da DML CONTABILIDADE LTDA., organizadas em uma sequência lógica para facilitar sua compreensão. A numeração de 1 a 9 identifica essas atividades, enquanto os códigos **P01 a P05**, apresentados na caracterização da organização, identificam especificamente os problemas encontrados durante o levantamento de requisitos. Esses problemas estão associados aos processos descritos abaixo e possuem rastreabilidade com as tabelas do banco de dados e as consultas gerenciais, conforme demonstrado na Seção 1.6. Dessa forma, a numeração dos processos e a codificação dos problemas possuem finalidades distintas, evitando ambiguidades na documentação.
+
 1. **Cadastro, canais e responsável:** cadastro de cliente PF/PJ com código interno e documento fiscal; canais de contato por cliente e atribuição de funcionários/departamentos.
 2. **Contratação e encerramento:** contrato com situação e datas; serviços contratados com valores/periodicidades próprios; registro de solicitação e conclusão de encerramento, destino e entrega da documentação.
 3. **Documentos:** registro de tipo, competência, canal e conferência. A ausência/incorreção gera pendência ligada à execução.
